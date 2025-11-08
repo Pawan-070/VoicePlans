@@ -18,7 +18,7 @@ HTML = """
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
       body {
-        background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 50%, #8b5cf6 100%);
+        background: linear-gradient(135deg, #fee2e2 0%, #fecaca 50%, #ef4444 100%);
         min-height: 100vh;
         padding: 2rem;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -36,7 +36,7 @@ HTML = """
         to { opacity: 1; transform: translateY(0); }
       }
       .header-section {
-        background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 50%, #8b5cf6 100%);
+        background: linear-gradient(135deg, #dc2626 0%, #ef4444 50%, #f87171 100%);
         color: white;
         padding: 2rem;
         border-radius: 20px 20px 0 0;
@@ -52,9 +52,9 @@ HTML = """
         padding: 2rem;
       }
       .todo-item {
-        background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
+        background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%);
         border: none;
-        border-left: 5px solid #6366f1;
+        border-left: 5px solid #f43f5e;
         border-radius: 12px;
         padding: 1rem 1.5rem;
         margin-bottom: 1rem;
@@ -65,8 +65,8 @@ HTML = """
         gap: 1rem;
       }
       .todo-item.completed {
-        background: linear-gradient(135deg, #86efac 0%, #4ade80 100%);
-        border-left: 5px solid #22c55e;
+        background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+        border-left: 5px solid #0ea5e9;
       }
       .todo-item.completed .todo-text {
         text-decoration: line-through;
@@ -74,7 +74,7 @@ HTML = """
       }
       .todo-item:hover {
         transform: translateX(8px) scale(1.02);
-        box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+        box-shadow: 0 8px 25px rgba(244, 63, 94, 0.4);
       }
       @keyframes fadeIn {
         from { opacity: 0; transform: translateY(20px) scale(0.95); }
@@ -119,20 +119,20 @@ HTML = """
         background: rgba(239, 68, 68, 0.2);
       }
       .add-note-section {
-        background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+        background: linear-gradient(135deg, #ffffff 0%, #fef2f2 100%);
         border-radius: 12px;
         padding: 1.5rem;
         margin-bottom: 1.5rem;
-        border-left: 5px solid #0ea5e9;
+        border-left: 5px solid #ef4444;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       }
       .add-note-section:hover {
-        box-shadow: 0 4px 15px rgba(6, 182, 212, 0.2);
+        box-shadow: 0 4px 15px rgba(239, 68, 68, 0.2);
       }
       .add-note-input {
         width: 100%;
         padding: 0.8rem;
-        border: 2px solid #0ea5e9;
+        border: 2px solid #fca5a5;
         border-radius: 8px;
         font-size: 1rem;
         margin-bottom: 0.8rem;
@@ -140,12 +140,12 @@ HTML = """
       }
       .add-note-input:focus {
         outline: none;
-        border-color: #0284c7;
-        box-shadow: 0 0 0 4px rgba(6, 182, 212, 0.1);
+        border-color: #ef4444;
+        box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
         transform: scale(1.01);
       }
       .add-btn {
-        background: linear-gradient(135deg, #06b6d4 0%, #0ea5e9 100%);
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
         color: white;
         border: none;
         border-radius: 8px;
@@ -158,13 +158,13 @@ HTML = """
       }
       .add-btn:hover {
         transform: translateY(-3px) scale(1.02);
-        box-shadow: 0 6px 20px rgba(6, 182, 212, 0.5);
+        box-shadow: 0 6px 20px rgba(239, 68, 68, 0.5);
       }
       .add-btn:active {
         transform: translateY(0) scale(0.98);
       }
       .share-btn {
-        background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+        background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
         color: white;
         border: none;
         border-radius: 12px;
@@ -173,13 +173,13 @@ HTML = """
         font-weight: bold;
         cursor: pointer;
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+        box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4);
         width: 100%;
         margin-top: 1rem;
       }
       .share-btn:hover {
         transform: translateY(-3px) scale(1.02);
-        box-shadow: 0 8px 25px rgba(139, 92, 246, 0.6);
+        box-shadow: 0 8px 25px rgba(220, 38, 38, 0.6);
       }
       .share-btn:active {
         transform: translateY(0) scale(0.98);
@@ -248,7 +248,7 @@ HTML = """
       </div>
       <div class="content-section">
         <div class="add-note-section">
-          <h5 style="margin: 0 0 1rem 0; color: #0c4a6e;">✏️ Add New Note</h5>
+          <h5 style="margin: 0 0 1rem 0; color: #991b1b;">✏️ Add New Note</h5>
           <input type="text" id="newNoteInput" class="add-note-input" placeholder="Type what you forgot to say...">
           <button class="add-btn" onclick="addNote()">+ Add Note</button>
         </div>
@@ -390,7 +390,7 @@ HOME_HTML = """
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
       body {
-        background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 50%, #8b5cf6 100%);
+        background: linear-gradient(135deg, #fee2e2 0%, #fecaca 50%, #ef4444 100%);
         min-height: 100vh;
         padding: 2rem;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -434,17 +434,17 @@ HOME_HTML = """
         padding: 2rem;
       }
       .step-card {
-        background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+        background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
         border-radius: 12px;
         padding: 1.5rem;
         margin-bottom: 1rem;
         transition: all 0.3s ease;
         animation: fadeIn 0.5s ease-out backwards;
-        border-left: 4px solid #3b82f6;
+        border-left: 4px solid #ef4444;
       }
       .step-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+        box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);
       }
       .step-card:nth-child(1) { animation-delay: 0.1s; }
       .step-card:nth-child(2) { animation-delay: 0.2s; }
@@ -454,7 +454,7 @@ HOME_HTML = """
         to { opacity: 1; transform: translateY(0); }
       }
       .step-number {
-        background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
         color: white;
         width: 40px;
         height: 40px;
@@ -465,19 +465,19 @@ HOME_HTML = """
         font-weight: bold;
         font-size: 1.2rem;
         margin-right: 1rem;
-        box-shadow: 0 4px 8px rgba(59, 130, 246, 0.4);
+        box-shadow: 0 4px 8px rgba(239, 68, 68, 0.4);
       }
       .info-box {
-        background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
-        border-left: 4px solid #0ea5e9;
+        background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+        border-left: 4px solid #f87171;
         border-radius: 12px;
         padding: 1.5rem;
         margin: 1.5rem 0;
         animation: fadeIn 0.5s ease-out 0.4s backwards;
       }
       .status-box {
-        background: linear-gradient(135deg, #e9d5ff 0%, #d8b4fe 100%);
-        border-left: 4px solid #a855f7;
+        background: linear-gradient(135deg, #ffffff 0%, #fef2f2 100%);
+        border-left: 4px solid #dc2626;
         border-radius: 12px;
         padding: 1.5rem;
         margin: 1.5rem 0;
@@ -485,7 +485,7 @@ HOME_HTML = """
       }
       .webhook-url {
         background: #1e293b;
-        color: #06b6d4;
+        color: #fca5a5;
         padding: 0.5rem 1rem;
         border-radius: 8px;
         font-family: 'Courier New', monospace;
@@ -546,7 +546,7 @@ HOME_HTML = """
         
         <div class="status-box">
           <strong><span class="icon">✅</span>App Status:</strong> 
-          <span style="color: #7c3aed;">Running and ready to receive voice notes!</span>
+          <span style="color: #dc2626;">Running and ready to receive voice notes!</span>
         </div>
       </div>
     </div>
