@@ -643,46 +643,68 @@ HOME_HTML = """
 </html>
 """
 
-def extract_date_from_text(text):
-    """Extract date from text using OpenAI and return ISO format date string"""
+def extract_datetime_from_text(text):
+    """Extract date and time from text using OpenAI and return structured data"""
     try:
         today = datetime.now()
-        prompt = f"""Today is {today.strftime('%A, %B %d, %Y')}.
+        prompt = f"""Today is {today.strftime('%A, %B %d, %Y')} at {today.strftime('%H:%M')}.
 
-Extract the date mentioned in this text and return ONLY the date in YYYY-MM-DD format.
-If no specific date is mentioned, return "none".
+Extract the date and time mentioned in this text. Return in this exact format:
+DATE: YYYY-MM-DD
+TIME: HH:MM
+If no date is mentioned, write "DATE: none"
+If no time is mentioned, write "TIME: none"
 
 Examples:
-- "meeting tomorrow" -> {(today + timedelta(days=1)).strftime('%Y-%m-%d')}
-- "doctor appointment on Friday" -> (calculate next Friday)
-- "buy groceries on December 25th" -> 2025-12-25
-- "call mom" -> none
+- "meeting tomorrow at 3pm" -> DATE: {(today + timedelta(days=1)).strftime('%Y-%m-%d')}\nTIME: 15:00
+- "doctor appointment Friday 2pm" -> DATE: (next Friday)\nTIME: 14:00
+- "buy groceries December 25th" -> DATE: 2025-12-25\nTIME: none
+- "call mom at 5:30 PM" -> DATE: none\nTIME: 17:30
+- "just a note" -> DATE: none\nTIME: none
 
 Text: {text}
 
-Return only the date in YYYY-MM-DD format or "none"."""
+Return in the exact format shown above."""
 
         response = openai_client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[{"role": "user", "content": prompt}],
             temperature=0,
-            max_tokens=20
+            max_tokens=50
         )
         
         result = response.choices[0].message.content
-        if result:
-            result = result.strip()
+        if not result:
+            return None, None
         
-        if not result or result.lower() == "none":
-            return None
+        result = result.strip()
+        date_val = None
+        time_val = None
         
-        # Validate date format
-        datetime.strptime(result, '%Y-%m-%d')
-        return result
+        # Parse the response
+        for line in result.split('\n'):
+            if line.startswith('DATE:'):
+                date_str = line.replace('DATE:', '').strip()
+                if date_str.lower() != 'none':
+                    try:
+                        datetime.strptime(date_str, '%Y-%m-%d')
+                        date_val = date_str
+                    except:
+                        pass
+            elif line.startswith('TIME:'):
+                time_str = line.replace('TIME:', '').strip()
+                if time_str.lower() != 'none':
+                    try:
+                        datetime.strptime(time_str, '%H:%M')
+                        time_val = time_str
+                    except:
+                        pass
+        
+        return date_val, time_val
         
     except Exception as e:
-        print(f"Error extracting date: {e}")
-        return None
+        print(f"Error extracting datetime: {e}")
+        return None, None
 
 def check_and_send_reminders():
     """Check for due tasks and send WhatsApp reminders"""
@@ -838,17 +860,18 @@ def webhook():
             lines = [x.strip() for x in text.replace(". ",".\n").split("\n") if x.strip()]
             id = str(uuid.uuid4())[:8]
             
-            # Extract dates from each line
+            # Extract dates and times from each line
             tasks = []
             for line in lines:
-                extracted_date = extract_date_from_text(line)
+                extracted_date, extracted_time = extract_datetime_from_text(line)
                 tasks.append({
                     "text": line,
                     "completed": False,
-                    "date": extracted_date
+                    "date": extracted_date,
+                    "time": extracted_time
                 })
-                if extracted_date:
-                    print(f"Extracted date '{extracted_date}' from: {line}")
+                if extracted_date or extracted_time:
+                    print(f"Extracted date='{extracted_date}', time='{extracted_time}' from: {line}")
             
             notes[id] = tasks
             note_owners[id] = who
@@ -888,7 +911,7 @@ def add_note(id):
     if not text:
         return jsonify({"success": False, "error": "Text is required"}), 400
     
-    notes[id].append({"text": text, "completed": False, "date": date if date else None})
+    notes[id].append({"text": text, "completed": False, "date": date if date else None, "time": None})
     return jsonify({"success": True})
 
 @app.route("/api/notes/<id>/delete/<int:index>", methods=["POST"])
