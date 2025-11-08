@@ -8,6 +8,7 @@ from openai import OpenAI
 load_dotenv()
 
 app = Flask(__name__)
+app.secret_key = os.getenv("FLASK_SECRET_KEY", os.urandom(24).hex())
 twilio = Client(os.getenv("TWILIO_SID"), os.getenv("TWILIO_TOKEN"))
 openai_client = OpenAI(api_key=os.getenv("OPENAI_KEY"))
 notes = {}
@@ -707,44 +708,37 @@ Return in the exact format shown above."""
         return None, None
 
 def get_calendar_service():
-    """Get authenticated Google Calendar service"""
+    """Get authenticated Google Calendar service (non-blocking)"""
     try:
         import pickle
         from google.oauth2.credentials import Credentials
-        from google_auth_oauthlib.flow import InstalledAppFlow
         from google.auth.transport.requests import Request
         from googleapiclient.discovery import build
         
-        SCOPES = ['https://www.googleapis.com/auth/calendar']
-        creds = None
+        # Only proceed if we already have valid credentials
+        if not os.path.exists('token.pickle'):
+            print("token.pickle not found. Run /auth endpoint first to authenticate.")
+            return None
         
-        # Load existing credentials
-        if os.path.exists('token.pickle'):
-            with open('token.pickle', 'rb') as token:
-                creds = pickle.load(token)
+        with open('token.pickle', 'rb') as token:
+            creds = pickle.load(token)
         
-        # If credentials don't exist or are invalid, authenticate
-        if not creds or not creds.valid:
-            if creds and creds.expired and creds.refresh_token:
-                creds.refresh(Request())
-            elif os.path.exists('credentials.json'):
-                flow = InstalledAppFlow.from_client_secrets_file(
-                    'credentials.json', SCOPES)
-                creds = flow.run_local_server(port=0)
-            else:
-                print("credentials.json not found. Google Calendar integration disabled.")
-                return None
-            
-            # Save credentials for future use
+        # Refresh if expired
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
             with open('token.pickle', 'wb') as token:
                 pickle.dump(creds, token)
+        
+        if not creds or not creds.valid:
+            print("Credentials invalid. Re-authenticate at /auth endpoint.")
+            return None
         
         return build('calendar', 'v3', credentials=creds)
     except Exception as e:
         print(f"Error getting calendar service: {e}")
         return None
 
-def create_calendar_event(task_text, date_str, time_str=None):
+def create_calendar_event(task_text, date_str, time_str=None, timezone='America/New_York'):
     """Create a Google Calendar event for a task"""
     try:
         service = get_calendar_service()
@@ -763,33 +757,34 @@ def create_calendar_event(task_text, date_str, time_str=None):
                 'summary': task_text,
                 'start': {
                     'dateTime': start_datetime,
-                    'timeZone': 'UTC',
+                    'timeZone': timezone,
                 },
                 'end': {
                     'dateTime': end_datetime,
-                    'timeZone': 'UTC',
+                    'timeZone': timezone,
                 },
                 'description': 'Created from Voice Plans App'
             }
         else:
-            # All-day event if no time specified
+            # All-day event - end date must be next day (exclusive)
+            end_date = (datetime.strptime(date_str, '%Y-%m-%d') + timedelta(days=1)).strftime('%Y-%m-%d')
             event = {
                 'summary': task_text,
                 'start': {
                     'date': date_str,
                 },
                 'end': {
-                    'date': date_str,
+                    'date': end_date,
                 },
                 'description': 'Created from Voice Plans App'
             }
         
         created_event = service.events().insert(calendarId='primary', body=event).execute()
-        print(f"Calendar event created: {created_event.get('htmlLink')}")
+        print(f"✓ Calendar event created: {created_event.get('htmlLink')}")
         return True
         
     except Exception as e:
-        print(f"Error creating calendar event: {e}")
+        print(f"✗ Error creating calendar event: {e}")
         return False
 
 def check_and_send_reminders():
@@ -893,6 +888,140 @@ def transcribe_with_assemblyai(audio_file_path):
         time.sleep(1)
     
     raise Exception("Transcription timed out")
+
+@app.route("/auth")
+def authenticate_calendar():
+    """Start Google Calendar OAuth flow"""
+    try:
+        from google_auth_oauthlib.flow import Flow
+        from flask import session
+        
+        SCOPES = ['https://www.googleapis.com/auth/calendar']
+        
+        if not os.path.exists('credentials.json'):
+            return """
+            <html>
+            <body style="font-family: Arial; padding: 40px; background: #fee2e2;">
+                <h2 style="color: #dc2626;">❌ credentials.json not found</h2>
+                <p>Please upload your Google Calendar credentials.json file to enable calendar integration.</p>
+                <p>See CALENDAR_SETUP.md for instructions.</p>
+            </body>
+            </html>
+            """
+        
+        # Force HTTPS for redirect URI (Replit uses HTTPS)
+        redirect_uri = request.url_root.replace('http://', 'https://').rstrip('/') + '/auth/callback'
+        
+        # Create flow with proper redirect URI
+        flow = Flow.from_client_secrets_file(
+            'credentials.json',
+            scopes=SCOPES,
+            redirect_uri=redirect_uri
+        )
+        
+        # Generate authorization URL
+        authorization_url, state = flow.authorization_url(
+            access_type='offline',
+            include_granted_scopes='true'
+        )
+        
+        # Store state in Flask session
+        session['oauth_state'] = state
+        
+        # Redirect user to Google's OAuth page
+        return f"""
+        <html>
+        <head>
+            <meta http-equiv="refresh" content="0; url={authorization_url}">
+        </head>
+        <body style="font-family: Arial; padding: 40px; background: #fef2f2;">
+            <h2 style="color: #dc2626;">Redirecting to Google...</h2>
+            <p>If you're not redirected, <a href="{authorization_url}">click here</a>.</p>
+        </body>
+        </html>
+        """
+        
+    except Exception as e:
+        return f"""
+        <html>
+        <body style="font-family: Arial; padding: 40px; background: #fef2f2;">
+            <h2 style="color: #dc2626;">❌ Error starting authentication</h2>
+            <p><strong>Error:</strong> {str(e)}</p>
+            <p><a href="/" style="color: #dc2626; font-weight: bold;">← Back to Home</a></p>
+        </body>
+        </html>
+        """
+
+@app.route("/auth/callback")
+def auth_callback():
+    """Handle OAuth callback from Google"""
+    try:
+        import pickle
+        from google_auth_oauthlib.flow import Flow
+        from googleapiclient.discovery import build
+        from flask import session
+        
+        SCOPES = ['https://www.googleapis.com/auth/calendar']
+        
+        # Get state from session
+        state = session.get('oauth_state')
+        if not state:
+            return """
+            <html>
+            <body style="font-family: Arial; padding: 40px; background: #fef2f2;">
+                <h2 style="color: #dc2626;">❌ Session expired</h2>
+                <p>Please <a href="/auth">restart authentication</a>.</p>
+            </body>
+            </html>
+            """
+        
+        # Reconstruct the flow with the same redirect URI
+        redirect_uri = request.url_root.replace('http://', 'https://').rstrip('/') + '/auth/callback'
+        flow = Flow.from_client_secrets_file(
+            'credentials.json',
+            scopes=SCOPES,
+            state=state,
+            redirect_uri=redirect_uri
+        )
+        
+        # Exchange authorization code for credentials
+        # Force HTTPS in the authorization response URL
+        authorization_response = request.url.replace('http://', 'https://')
+        flow.fetch_token(authorization_response=authorization_response)
+        creds = flow.credentials
+        
+        # Save credentials
+        with open('token.pickle', 'wb') as token:
+            pickle.dump(creds, token)
+        
+        # Test the connection
+        service = build('calendar', 'v3', credentials=creds)
+        calendar = service.calendars().get(calendarId='primary').execute()
+        
+        # Clear session
+        session.pop('oauth_state', None)
+        
+        return f"""
+        <html>
+        <body style="font-family: Arial; padding: 40px; background: #dcfce7;">
+            <h2 style="color: #16a34a;">✅ Successfully connected to Google Calendar!</h2>
+            <p><strong>Calendar:</strong> {calendar.get('summary', 'Primary Calendar')}</p>
+            <p>Your voice notes with dates/times will now automatically sync to your calendar.</p>
+            <p><a href="/" style="color: #dc2626; font-weight: bold;">← Back to Home</a></p>
+        </body>
+        </html>
+        """
+        
+    except Exception as e:
+        return f"""
+        <html>
+        <body style="font-family: Arial; padding: 40px; background: #fef2f2;">
+            <h2 style="color: #dc2626;">❌ Authentication failed</h2>
+            <p><strong>Error:</strong> {str(e)}</p>
+            <p>Please <a href="/auth">try again</a> or check CALENDAR_SETUP.md for troubleshooting.</p>
+        </body>
+        </html>
+        """
 
 @app.route("/")
 def home():

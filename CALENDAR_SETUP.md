@@ -35,21 +35,24 @@ Your Voice Plans App now automatically adds tasks to Google Calendar when you me
 ### Step 4: Create OAuth Credentials
 1. Go to **APIs & Services** → **Credentials**
 2. Click **Create Credentials** → **OAuth client ID**
-3. Select **Desktop app** as application type
-4. Name it "Voice Plans Desktop"
-5. Click **Create**
-6. Click **Download JSON** (the download icon)
-7. **Rename the downloaded file to `credentials.json`**
-8. **Upload it to this Replit project** (drag and drop into the file browser)
+3. Select **Web application** as application type
+4. Name it "Voice Plans Web"
+5. Under **Authorized redirect URIs**, click **Add URI**
+6. Add: `https://your-replit-url/auth/callback` (replace with your actual Replit URL)
+   - Example: `https://myproject.username.repl.co/auth/callback`
+7. Click **Create**
+8. Click **Download JSON** (the download icon)
+9. **Rename the downloaded file to `credentials.json`**
+10. **Upload it to this Replit project** (drag and drop into the file browser)
 
 ### Step 5: First-Time Authentication
-1. Run your app (it should already be running)
-2. When you send your first voice note with a date/time, the authentication will trigger
-3. Look at the console logs - you'll see a URL
-4. Open that URL in your browser
-5. Sign in with your Google account
-6. Grant the permissions
-7. You'll be redirected - the authentication is complete!
+1. Make sure your app is running
+2. Visit the authentication page: **https://your-replit-url/auth**
+3. The OAuth flow will start automatically
+4. Sign in with your Google account when prompted
+5. Grant the calendar permissions
+6. You'll see a success message when complete
+7. That's it! Your calendar is now connected.
 
 ### Step 6: Test It!
 Send a WhatsApp voice note like:
