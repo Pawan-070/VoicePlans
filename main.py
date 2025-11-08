@@ -48,7 +48,7 @@ HOME_HTML = """
         <h5 class="mt-4">How it works:</h5>
         <ol>
           <li>Send a voice note to your Twilio WhatsApp number</li>
-          <li>The app transcribes it using Gladia AI</li>
+          <li>The app transcribes it using AssemblyAI</li>
           <li>Get a shareable to-do list link shortly!</li>
         </ol>
         
@@ -67,72 +67,64 @@ HOME_HTML = """
 </html>
 """
 
-def transcribe_with_gladia(audio_file_path):
-    gladia_api_key = os.getenv("GLADIA_API_KEY")
+def transcribe_with_assemblyai(audio_file_path):
+    api_key = os.getenv("ASSEMBLYAI_API_KEY")
     
     headers = {
-        "x-gladia-key": gladia_api_key
+        "authorization": api_key
     }
     
-    print("Uploading audio to Gladia...")
+    print("Uploading audio to AssemblyAI...")
     with open(audio_file_path, "rb") as audio_file:
-        files = {
-            "audio": (os.path.basename(audio_file_path), audio_file, "audio/wav")
-        }
-        
         upload_response = requests.post(
-            "https://api.gladia.io/v2/upload",
+            "https://api.assemblyai.com/v2/upload",
             headers=headers,
-            files=files,
+            data=audio_file,
             timeout=60
         )
         
-        if upload_response.status_code != 201:
+        if upload_response.status_code != 200:
             raise Exception(f"Upload failed: {upload_response.text}")
         
-        audio_url = upload_response.json()["audio_url"]
+        audio_url = upload_response.json()["upload_url"]
         print(f"Audio uploaded: {audio_url}")
     
     print("Starting transcription...")
-    transcription_headers = {
-        "x-gladia-key": gladia_api_key,
-        "Content-Type": "application/json"
-    }
-    
-    payload = {
+    transcription_payload = {
         "audio_url": audio_url,
-        "detect_language": True
+        "language_detection": True
     }
     
     transcription_response = requests.post(
-        "https://api.gladia.io/v2/pre-recorded",
-        headers=transcription_headers,
-        json=payload,
+        "https://api.assemblyai.com/v2/transcript",
+        headers=headers,
+        json=transcription_payload,
         timeout=60
     )
     
-    if transcription_response.status_code != 201:
+    if transcription_response.status_code != 200:
         raise Exception(f"Transcription request failed: {transcription_response.text}")
     
-    result = transcription_response.json()
-    transcription_id = result["id"]
-    result_url = result["result_url"]
-    
-    print(f"Transcription ID: {transcription_id}")
+    transcript_id = transcription_response.json()["id"]
+    print(f"Transcription ID: {transcript_id}")
     print("Waiting for transcription to complete...")
+    
+    polling_url = f"https://api.assemblyai.com/v2/transcript/{transcript_id}"
     
     max_attempts = 60
     for attempt in range(max_attempts):
-        result_response = requests.get(result_url, headers=transcription_headers, timeout=30)
-        result_data = result_response.json()
+        polling_response = requests.get(polling_url, headers=headers, timeout=30)
+        result = polling_response.json()
         
-        if result_data["status"] == "done":
+        status = result["status"]
+        
+        if status == "completed":
             print("Transcription complete!")
-            return result_data["result"]["transcription"]["full_transcript"]
-        elif result_data["status"] == "error":
-            raise Exception(f"Transcription failed: {result_data}")
+            return result["text"]
+        elif status == "error":
+            raise Exception(f"Transcription failed: {result.get('error')}")
         
-        print(f"Status: {result_data['status']}... waiting")
+        print(f"Status: {status}... waiting")
         time.sleep(2)
     
     raise Exception("Transcription timed out")
@@ -169,7 +161,7 @@ def webhook():
                 temp_file = f.name
             
             print(f"Transcribing audio file: {temp_file}")
-            text = transcribe_with_gladia(temp_file)
+            text = transcribe_with_assemblyai(temp_file)
             
             os.unlink(temp_file)
             
@@ -199,4 +191,5 @@ def webhook():
 def view(id):
     return render_template_string(HTML, lines=notes.get(id, ["No notes yet"]))
 
-app.run(host="0.0.0.0", port=5000)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
