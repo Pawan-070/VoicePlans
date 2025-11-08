@@ -1,14 +1,17 @@
-# Voice Notes To-Do App
+# Voice Plans App - Flora Edition
 
 ## Overview
-A Flask web application that converts WhatsApp voice notes into organized to-do lists using OpenAI's Whisper API for transcription.
+A beautiful Flask web application with flora-themed design that converts WhatsApp voice notes into organized, categorized to-do lists with automatic date/time extraction and Google Calendar integration.
 
 ## Features
-- Receives voice notes via Twilio WhatsApp webhook
-- Transcribes audio using OpenAI Whisper
-- Converts transcriptions into formatted to-do lists
-- Generates shareable links for each to-do list
-- Sends results back via WhatsApp
+- **Beautiful Flora Design**: Modern, calming green-themed interface with professional aesthetics
+- **Smart Categorization**: Tasks automatically organized into "Scheduled" and "Tasks" sections
+- **Voice Note Processing**: Receives voice notes via Twilio WhatsApp webhook
+- **AI Transcription**: Uses AssemblyAI for accurate English transcription
+- **Date/Time Extraction**: AI automatically extracts dates and times from voice notes
+- **Google Calendar Sync**: Automatically creates calendar events for scheduled tasks
+- **Shareable Links**: Generate unique, beautiful links for each to-do list
+- **Interactive UI**: Check off tasks, add new ones, delete, and share with ease
 
 ## Tech Stack
 - Python 3.11
