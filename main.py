@@ -18,154 +18,64 @@ HTML = """
 <!doctype html>
 <html>
   <head>
-    <title>Your Voice Plans</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>🌿 Your Voice Plans</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-      body {
-        background: linear-gradient(135deg, #fee2e2 0%, #fecaca 50%, #ef4444 100%);
-        min-height: 100vh;
-        padding: 2rem;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      }
-      .main-card {
-        background: white;
-        border-radius: 20px;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-        max-width: 700px;
-        margin: 0 auto;
-        animation: slideUp 0.5s ease-out;
-      }
-      @keyframes slideUp {
-        from { opacity: 0; transform: translateY(30px); }
-        to { opacity: 1; transform: translateY(0); }
-      }
-      .header-section {
-        background: linear-gradient(135deg, #dc2626 0%, #ef4444 50%, #f87171 100%);
-        color: white;
-        padding: 2rem;
-        border-radius: 20px 20px 0 0;
-        text-align: center;
-      }
-      .header-section h1 {
-        font-size: 2rem;
-        font-weight: bold;
+      * {
         margin: 0;
-        text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        padding: 0;
+        box-sizing: border-box;
       }
-      .content-section {
-        padding: 2rem;
-      }
-      .todo-item {
-        background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%);
-        border: none;
-        border-left: 5px solid #f43f5e;
-        border-radius: 12px;
-        padding: 1rem 1.5rem;
-        margin-bottom: 1rem;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) backwards;
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-      }
-      .todo-item.completed {
-        background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-        border-left: 5px solid #0ea5e9;
-      }
-      .todo-item.completed .todo-text {
-        text-decoration: line-through;
-        color: #6b7280;
-      }
-      .todo-item:hover {
-        transform: translateX(8px) scale(1.02);
-        box-shadow: 0 8px 25px rgba(244, 63, 94, 0.4);
-      }
-      @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px) scale(0.95); }
-        to { opacity: 1; transform: translateY(0) scale(1); }
-      }
-      .todo-checkbox {
-        width: 24px;
-        height: 24px;
-        cursor: pointer;
-        flex-shrink: 0;
-        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      }
-      .todo-checkbox:hover {
-        transform: scale(1.15);
-      }
-      .todo-text {
-        flex: 1;
-        font-size: 1rem;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      }
-      .todo-content {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        gap: 0.3rem;
-      }
-      .todo-date {
-        font-size: 0.75rem;
-        color: white;
-        background: #ef4444;
-        font-weight: 600;
-        padding: 0.25rem 0.6rem;
-        border-radius: 12px;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.3rem;
-        margin-top: 0.3rem;
-      }
-      .date-input {
-        padding: 0.4rem 0.6rem;
-        border: 1px solid #fca5a5;
-        border-radius: 6px;
-        font-size: 0.85rem;
-        color: #dc2626;
-        background: white;
-        cursor: pointer;
-        transition: all 0.2s ease;
-      }
-      .date-input:focus {
-        outline: none;
-        border-color: #ef4444;
-        box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.1);
-      }
-      .delete-btn {
-        background: transparent;
-        color: #9ca3af;
-        border: none;
-        padding: 0.3rem;
-        cursor: pointer;
-        font-size: 1.1rem;
-        transition: color 0.2s ease;
-        flex-shrink: 0;
-      }
-      .delete-btn:hover {
-        color: #ef4444;
-      }
-      .delete-btn:active {
-        color: #dc2626;
-      }
-      .add-note-section {
-        background: linear-gradient(135deg, #ffffff 0%, #fef2f2 100%);
-        border-radius: 12px;
+      
+      body {
+        background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #bbf7d0 100%);
+        min-height: 100vh;
         padding: 1.5rem;
+        font-family: 'Inter', -apple-system, sans-serif;
+        color: #1e3a1e;
+      }
+      
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      
+      /* Hero Header */
+      .hero-header {
+        background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+        border-radius: 20px;
+        padding: 2.5rem 2rem;
+        text-align: center;
+        box-shadow: 0 10px 40px rgba(5, 150, 105, 0.25);
         margin-bottom: 1.5rem;
-        border-left: 5px solid #ef4444;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
       }
-      .add-note-section:hover {
-        box-shadow: 0 4px 15px rgba(239, 68, 68, 0.2);
+      
+      .hero-header::before {
+        content: '🌿';
+        position: absolute;
+        font-size: 6rem;
+        opacity: 0.1;
+        top: -1rem;
+        left: 1rem;
       }
+      
+      .hero-header h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: white;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      }
+      
+      /* Add Note Button */
       .add-note-toggle {
-        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        background: linear-gradient(135deg, #059669 0%, #10b981 100%);
         color: white;
         border: none;
-        border-radius: 12px;
-        padding: 1rem 1.5rem;
+        border-radius: 16px;
+        padding: 1rem 2rem;
         font-size: 1rem;
         font-weight: 600;
         cursor: pointer;
@@ -175,187 +85,357 @@ HTML = """
         justify-content: center;
         gap: 0.5rem;
         transition: all 0.3s ease;
-        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
         margin-bottom: 1.5rem;
       }
+      
       .add-note-toggle:hover {
         transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
+        box-shadow: 0 6px 16px rgba(5, 150, 105, 0.4);
       }
-      .add-note-toggle:active {
-        transform: translateY(0);
-      }
-      .add-note-form {
+      
+      /* Add Note Form */
+      .add-note-section {
+        background: white;
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 4px 20px rgba(5, 150, 105, 0.08);
+        border: 2px solid #d1fae5;
         display: none;
         animation: slideDown 0.3s ease-out;
       }
-      .add-note-form.active {
+      
+      .add-note-section.active {
         display: block;
       }
+      
       @keyframes slideDown {
-        from {
-          opacity: 0;
-          transform: translateY(-10px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-      .add-note-input {
-        width: 100%;
-        padding: 0.8rem;
-        border: 2px solid #fca5a5;
-        border-radius: 8px;
-        font-size: 1rem;
-        margin-bottom: 0.8rem;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      }
-      .add-note-input:focus {
-        outline: none;
-        border-color: #ef4444;
-        box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
-        transform: scale(1.01);
-      }
-      .add-btn {
-        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-        color: white;
-        border: none;
-        border-radius: 8px;
-        padding: 0.8rem 1.5rem;
-        font-size: 1rem;
-        font-weight: bold;
-        cursor: pointer;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        width: 100%;
-      }
-      .add-btn:hover {
-        transform: translateY(-3px) scale(1.02);
-        box-shadow: 0 6px 20px rgba(239, 68, 68, 0.5);
-      }
-      .add-btn:active {
-        transform: translateY(0) scale(0.98);
-      }
-      .share-btn {
-        background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
-        color: white;
-        border: none;
-        border-radius: 12px;
-        padding: 1rem 2rem;
-        font-size: 1.1rem;
-        font-weight: bold;
-        cursor: pointer;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4);
-        width: 100%;
-        margin-top: 1rem;
-      }
-      .share-btn:hover {
-        transform: translateY(-3px) scale(1.02);
-        box-shadow: 0 8px 25px rgba(220, 38, 38, 0.6);
-      }
-      .share-btn:active {
-        transform: translateY(0) scale(0.98);
-      }
-      .copy-notification {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: #10b981;
-        color: white;
-        padding: 1rem 2rem;
-        border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        display: none;
-        animation: slideInRight 0.3s ease-out;
-        z-index: 1000;
-      }
-      @keyframes slideInRight {
-        from { transform: translateX(100%); opacity: 0; }
-        to { transform: translateX(0); opacity: 1; }
-      }
-      .empty-state {
-        text-align: center;
-        color: #6b7280;
-        padding: 2rem;
-        font-style: italic;
-      }
-      .notice-box {
-        background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-        border-left: 5px solid #f59e0b;
-        border-radius: 12px;
-        padding: 1.2rem 1.5rem;
-        margin-bottom: 1.5rem;
-        animation: slideDown 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 0 2px 8px rgba(245, 158, 11, 0.15);
-      }
-      @keyframes slideDown {
-        from { opacity: 0; transform: translateY(-20px); }
+        from { opacity: 0; transform: translateY(-10px); }
         to { opacity: 1; transform: translateY(0); }
       }
-      .notice-box h6 {
-        color: #92400e;
-        font-weight: bold;
-        margin: 0 0 0.8rem 0;
-        font-size: 1rem;
+      
+      .add-note-section h5 {
+        color: #047857;
+        font-weight: 600;
+        margin-bottom: 1rem;
         display: flex;
         align-items: center;
         gap: 0.5rem;
       }
-      .notice-box ul {
-        margin: 0;
-        padding-left: 1.2rem;
-        color: #78350f;
-        font-size: 0.9rem;
-        line-height: 1.6;
+      
+      .add-note-input {
+        width: 100%;
+        padding: 0.8rem;
+        border: 2px solid #a7f3d0;
+        border-radius: 12px;
+        font-size: 1rem;
+        margin-bottom: 0.8rem;
+        transition: all 0.3s ease;
+        font-family: 'Inter', sans-serif;
       }
-      .notice-box li {
-        margin-bottom: 0.3rem;
+      
+      .add-note-input:focus {
+        outline: none;
+        border-color: #10b981;
+        box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+      }
+      
+      .add-btn {
+        background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        padding: 0.8rem 1.5rem;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 100%;
+        box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+      }
+      
+      .add-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(5, 150, 105, 0.4);
+      }
+      
+      /* Category Section */
+      .category-section {
+        background: white;
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 4px 20px rgba(5, 150, 105, 0.08);
+        border: 1px solid #d1fae5;
+      }
+      
+      .category-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid #d1fae5;
+      }
+      
+      .category-icon {
+        font-size: 1.5rem;
+      }
+      
+      .category-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #047857;
+        flex: 1;
+      }
+      
+      .category-count {
+        background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+        color: #047857;
+        padding: 0.25rem 0.75rem;
+        border-radius: 12px;
+        font-size: 0.85rem;
+        font-weight: 600;
+      }
+      
+      /* Todo Item */
+      .todo-item {
+        background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+        border: none;
+        border-left: 4px solid #10b981;
+        border-radius: 12px;
+        padding: 1rem 1.25rem;
+        margin-bottom: 0.75rem;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+      
+      .todo-item:hover {
+        transform: translateX(6px);
+        box-shadow: 0 6px 20px rgba(16, 185, 129, 0.15);
+      }
+      
+      .todo-item.completed {
+        background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+        border-left: 4px solid #9ca3af;
+      }
+      
+      .todo-item.completed .todo-text {
+        text-decoration: line-through;
+        color: #9ca3af;
+      }
+      
+      .todo-checkbox {
+        width: 22px;
+        height: 22px;
+        cursor: pointer;
+        flex-shrink: 0;
+        accent-color: #10b981;
+        transition: transform 0.2s ease;
+      }
+      
+      .todo-checkbox:hover {
+        transform: scale(1.1);
+      }
+      
+      .todo-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+      }
+      
+      .todo-text {
+        font-size: 1rem;
+        color: #1e3a1e;
+        line-height: 1.5;
+        transition: all 0.3s ease;
+      }
+      
+      .todo-date {
+        font-size: 0.8rem;
+        color: white;
+        background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+        font-weight: 600;
+        padding: 0.3rem 0.7rem;
+        border-radius: 12px;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        width: fit-content;
+        box-shadow: 0 2px 8px rgba(5, 150, 105, 0.2);
+      }
+      
+      .delete-btn {
+        background: transparent;
+        color: #d1d5db;
+        border: none;
+        padding: 0.3rem;
+        cursor: pointer;
+        font-size: 1.3rem;
+        transition: all 0.2s ease;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-center;
+      }
+      
+      .delete-btn:hover {
+        color: #ef4444;
+        transform: scale(1.1);
+      }
+      
+      /* Share Button */
+      .share-btn {
+        background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+        color: white;
+        border: none;
+        border-radius: 16px;
+        padding: 1rem 2rem;
+        font-size: 1.05rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(5, 150, 105, 0.3);
+        width: 100%;
+        margin-top: 1rem;
+      }
+      
+      .share-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(5, 150, 105, 0.4);
+      }
+      
+      /* Copy Notification */
+      .copy-notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 16px;
+        box-shadow: 0 8px 24px rgba(5, 150, 105, 0.4);
+        display: none;
+        animation: slideInRight 0.3s ease-out;
+        z-index: 1000;
+        font-weight: 600;
+      }
+      
+      @keyframes slideInRight {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+      }
+      
+      /* Empty State */
+      .empty-state {
+        text-align: center;
+        padding: 3rem 2rem;
+        color: #6b7280;
+      }
+      
+      .empty-state-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+      }
+      
+      .empty-state-text {
+        font-size: 1.1rem;
+        color: #9ca3af;
+      }
+      
+      @media (max-width: 768px) {
+        body {
+          padding: 1rem;
+        }
+        
+        .hero-header h1 {
+          font-size: 1.5rem;
+        }
+        
+        .category-title {
+          font-size: 1.1rem;
+        }
       }
     </style>
   </head>
   <body>
-    <div class="main-card">
-      <div class="header-section">
-        <h1>🎙️ Your Voice Plans</h1>
+    <div class="container">
+      <div class="hero-header">
+        <h1>🌿 Your Voice Plans</h1>
       </div>
-      <div class="content-section">
-        <button class="add-note-toggle" onclick="toggleAddForm()">
-          ✏️ Add New Note
-        </button>
-        
-        <div id="addNoteForm" class="add-note-section add-note-form">
-          <h5 style="margin: 0 0 1rem 0; color: #991b1b;">✏️ Create New Note</h5>
-          <input type="text" id="newNoteInput" class="add-note-input" placeholder="Type what you forgot to say...">
-          <input type="date" id="newNoteDate" class="add-note-input" style="margin-bottom: 0.8rem;">
-          <button class="add-btn" onclick="addNote()">+ Add Note</button>
-        </div>
+      
+      <button class="add-note-toggle" onclick="toggleAddForm()">
+        ✏️ Add New Task
+      </button>
+      
+      <div id="addNoteForm" class="add-note-section">
+        <h5>✏️ Create New Task</h5>
+        <input type="text" id="newNoteInput" class="add-note-input" placeholder="Enter your task...">
+        <input type="date" id="newNoteDate" class="add-note-input">
+        <button class="add-btn" onclick="addNote()">+ Add Task</button>
+      </div>
 
-        <div id="todoList">
-          {% if items %}
-            {% for item in items %}
+      <div id="todoList">
+        {% if items %}
+          <!-- Scheduled Tasks -->
+          {% set scheduled = items | selectattr('date') | list %}
+          {% if scheduled %}
+          <div class="category-section">
+            <div class="category-header">
+              <span class="category-icon">📅</span>
+              <h3 class="category-title">Scheduled</h3>
+              <span class="category-count">{{ scheduled | length }}</span>
+            </div>
+            {% for item in scheduled %}
               <div class="todo-item {% if item.completed %}completed{% endif %}" data-index="{{ loop.index0 }}">
-                <input type="checkbox" class="todo-checkbox" {% if item.completed %}checked{% endif %} onchange="toggleComplete({{ loop.index0 }})">
+                <input type="checkbox" class="todo-checkbox" {% if item.completed %}checked{% endif %} onchange="toggleComplete({{ items.index(item) }})">
                 <div class="todo-content">
                   <span class="todo-text">{{ item.text }}</span>
-                  {% if item.date %}
-                    <div class="todo-date">📅 {{ item.date }}</div>
-                  {% endif %}
+                  <div class="todo-date">📅 {{ item.date }}{% if item.time %} at {{ item.time }}{% endif %}</div>
                 </div>
-                <button class="delete-btn" onclick="deleteNote({{ loop.index0 }})">🗑️</button>
+                <button class="delete-btn" onclick="deleteNote({{ items.index(item) }})">🗑</button>
               </div>
             {% endfor %}
-          {% else %}
-            <div class="empty-state">
-              No notes yet. Add a note above or send a voice note to get started!
-            </div>
+          </div>
           {% endif %}
-        </div>
-
-        <button class="share-btn" onclick="shareLink()">
-          📤 Share This List
-        </button>
+          
+          <!-- Other Tasks -->
+          {% set unscheduled = items | rejectattr('date') | list %}
+          {% if unscheduled %}
+          <div class="category-section">
+            <div class="category-header">
+              <span class="category-icon">📋</span>
+              <h3 class="category-title">Tasks</h3>
+              <span class="category-count">{{ unscheduled | length }}</span>
+            </div>
+            {% for item in unscheduled %}
+              <div class="todo-item {% if item.completed %}completed{% endif %}" data-index="{{ loop.index0 }}">
+                <input type="checkbox" class="todo-checkbox" {% if item.completed %}checked{% endif %} onchange="toggleComplete({{ items.index(item) }})">
+                <div class="todo-content">
+                  <span class="todo-text">{{ item.text }}</span>
+                </div>
+                <button class="delete-btn" onclick="deleteNote({{ items.index(item) }})">🗑</button>
+              </div>
+            {% endfor %}
+          </div>
+          {% endif %}
+        {% else %}
+          <div class="category-section">
+            <div class="empty-state">
+              <div class="empty-state-icon">🌱</div>
+              <div class="empty-state-text">No tasks yet. Send a voice note or add a task above!</div>
+            </div>
+          </div>
+        {% endif %}
       </div>
+
+      <button class="share-btn" onclick="shareLink()">
+        📤 Share This List
+      </button>
     </div>
     
     <div class="copy-notification" id="notification">
@@ -377,7 +457,7 @@ HTML = """
         const date = dateInput.value;
         
         if (!text) {
-          alert('Please enter a note!');
+          alert('Please enter a task!');
           return;
         }
 
@@ -396,7 +476,7 @@ HTML = """
       }
 
       function deleteNote(index) {
-        if (!confirm('Delete this note?')) return;
+        if (!confirm('Delete this task?')) return;
 
         fetch(`/api/notes/${noteId}/delete/${index}`, {
           method: 'POST'
@@ -434,8 +514,8 @@ HTML = """
         
         if (navigator.share) {
           navigator.share({
-            title: 'My Voice Notes To-Do List',
-            text: 'Check out my voice notes!',
+            title: '🌿 My Voice Plans',
+            text: 'Check out my organized tasks!',
             url: url
           }).catch(() => {
             copyToClipboard(url);
@@ -447,29 +527,19 @@ HTML = """
       
       function copyToClipboard(text) {
         navigator.clipboard.writeText(text).then(() => {
-          showNotification();
-        }).catch(() => {
-          const textarea = document.createElement('textarea');
-          textarea.value = text;
-          document.body.appendChild(textarea);
-          textarea.select();
-          document.execCommand('copy');
-          document.body.removeChild(textarea);
-          showNotification();
+          const notification = document.getElementById('notification');
+          notification.style.display = 'block';
+          setTimeout(() => {
+            notification.style.display = 'none';
+          }, 3000);
+        }).catch(err => {
+          console.error('Failed to copy:', err);
+          alert('Link: ' + text);
         });
-      }
-      
-      function showNotification() {
-        const notification = document.getElementById('notification');
-        notification.style.display = 'block';
-        setTimeout(() => {
-          notification.style.display = 'none';
-        }, 3000);
       }
     </script>
   </body>
-</html>
-"""
+</html>"""
 
 HOME_HTML = """
 <!doctype html>
