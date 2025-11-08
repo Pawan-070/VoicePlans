@@ -106,12 +106,16 @@ HTML = """
         gap: 0.3rem;
       }
       .todo-date {
-        font-size: 0.85rem;
-        color: #ef4444;
+        font-size: 0.75rem;
+        color: white;
+        background: #ef4444;
         font-weight: 600;
-        display: flex;
+        padding: 0.25rem 0.6rem;
+        border-radius: 12px;
+        display: inline-flex;
         align-items: center;
         gap: 0.3rem;
+        margin-top: 0.3rem;
       }
       .date-input {
         padding: 0.4rem 0.6rem;
@@ -288,7 +292,7 @@ HTML = """
                 <div class="todo-content">
                   <span class="todo-text">{{ item.text }}</span>
                   {% if item.date %}
-                    <span class="todo-date">📅 {{ item.date }}</span>
+                    <div class="todo-date">📅 {{ item.date }}</div>
                   {% endif %}
                 </div>
                 <button class="delete-btn" onclick="deleteNote({{ loop.index0 }})">🗑️</button>
