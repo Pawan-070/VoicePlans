@@ -159,6 +159,48 @@ HTML = """
       .add-note-section:hover {
         box-shadow: 0 4px 15px rgba(239, 68, 68, 0.2);
       }
+      .add-note-toggle {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        padding: 1rem 1.5rem;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        margin-bottom: 1.5rem;
+      }
+      .add-note-toggle:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
+      }
+      .add-note-toggle:active {
+        transform: translateY(0);
+      }
+      .add-note-form {
+        display: none;
+        animation: slideDown 0.3s ease-out;
+      }
+      .add-note-form.active {
+        display: block;
+      }
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
       .add-note-input {
         width: 100%;
         padding: 0.8rem;
@@ -277,8 +319,12 @@ HTML = """
         <h1>🎙️ Your Voice Plans</h1>
       </div>
       <div class="content-section">
-        <div class="add-note-section">
-          <h5 style="margin: 0 0 1rem 0; color: #991b1b;">✏️ Add New Note</h5>
+        <button class="add-note-toggle" onclick="toggleAddForm()">
+          ✏️ Add New Note
+        </button>
+        
+        <div id="addNoteForm" class="add-note-section add-note-form">
+          <h5 style="margin: 0 0 1rem 0; color: #991b1b;">✏️ Create New Note</h5>
           <input type="text" id="newNoteInput" class="add-note-input" placeholder="Type what you forgot to say...">
           <input type="date" id="newNoteDate" class="add-note-input" style="margin-bottom: 0.8rem;">
           <button class="add-btn" onclick="addNote()">+ Add Note</button>
@@ -317,6 +363,11 @@ HTML = """
 
     <script>
       const noteId = "{{ note_id }}";
+
+      function toggleAddForm() {
+        const form = document.getElementById('addNoteForm');
+        form.classList.toggle('active');
+      }
 
       function addNote() {
         const input = document.getElementById('newNoteInput');
