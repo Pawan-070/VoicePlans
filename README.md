@@ -1,4 +1,4 @@
-# Voice Plans App
+# Echo Note App
 
 
 **Speak once. Get a plan.**  
