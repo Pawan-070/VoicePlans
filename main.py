@@ -1,13 +1,11 @@
 from flask import Flask, request, render_template_string
 from twilio.twiml.messaging_response import MessagingResponse
 from twilio.rest import Client
-import os, time, uuid, requests, subprocess, tempfile, threading
-from openai import OpenAI
+import os, time, uuid, requests, tempfile, threading
 from dotenv import load_dotenv
 load_dotenv()
 
 app = Flask(__name__)
-openai = OpenAI(api_key=os.getenv("OPENAI_KEY"))
 twilio = Client(os.getenv("TWILIO_SID"), os.getenv("TWILIO_TOKEN"))
 notes = {}
 
@@ -50,7 +48,7 @@ HOME_HTML = """
         <h5 class="mt-4">How it works:</h5>
         <ol>
           <li>Send a voice note to your Twilio WhatsApp number</li>
-          <li>The app transcribes it using OpenAI Whisper</li>
+          <li>The app transcribes it using Gladia AI</li>
           <li>Get a shareable to-do list link shortly!</li>
         </ol>
         
@@ -68,6 +66,76 @@ HOME_HTML = """
   </body>
 </html>
 """
+
+def transcribe_with_gladia(audio_file_path):
+    gladia_api_key = os.getenv("GLADIA_API_KEY")
+    
+    headers = {
+        "x-gladia-key": gladia_api_key
+    }
+    
+    print("Uploading audio to Gladia...")
+    with open(audio_file_path, "rb") as audio_file:
+        files = {
+            "audio": (os.path.basename(audio_file_path), audio_file, "audio/wav")
+        }
+        
+        upload_response = requests.post(
+            "https://api.gladia.io/v2/upload",
+            headers=headers,
+            files=files,
+            timeout=60
+        )
+        
+        if upload_response.status_code != 201:
+            raise Exception(f"Upload failed: {upload_response.text}")
+        
+        audio_url = upload_response.json()["audio_url"]
+        print(f"Audio uploaded: {audio_url}")
+    
+    print("Starting transcription...")
+    transcription_headers = {
+        "x-gladia-key": gladia_api_key,
+        "Content-Type": "application/json"
+    }
+    
+    payload = {
+        "audio_url": audio_url,
+        "detect_language": True
+    }
+    
+    transcription_response = requests.post(
+        "https://api.gladia.io/v2/pre-recorded",
+        headers=transcription_headers,
+        json=payload,
+        timeout=60
+    )
+    
+    if transcription_response.status_code != 201:
+        raise Exception(f"Transcription request failed: {transcription_response.text}")
+    
+    result = transcription_response.json()
+    transcription_id = result["id"]
+    result_url = result["result_url"]
+    
+    print(f"Transcription ID: {transcription_id}")
+    print("Waiting for transcription to complete...")
+    
+    max_attempts = 60
+    for attempt in range(max_attempts):
+        result_response = requests.get(result_url, headers=transcription_headers, timeout=30)
+        result_data = result_response.json()
+        
+        if result_data["status"] == "done":
+            print("Transcription complete!")
+            return result_data["result"]["transcription"]["full_transcript"]
+        elif result_data["status"] == "error":
+            raise Exception(f"Transcription failed: {result_data}")
+        
+        print(f"Status: {result_data['status']}... waiting")
+        time.sleep(2)
+    
+    raise Exception("Transcription timed out")
 
 @app.route("/")
 def home():
@@ -95,23 +163,15 @@ def webhook():
             
             print(f"Downloaded {len(audio)} bytes")
             
-            with tempfile.NamedTemporaryFile(suffix=".ogg", delete=False) as f1:
-                f1.write(audio)
-                f1.flush()
-                temp_ogg = f1.name
+            with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as f:
+                f.write(audio)
+                f.flush()
+                temp_file = f.name
             
-            with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as f2:
-                temp_wav = f2.name
+            print(f"Transcribing audio file: {temp_file}")
+            text = transcribe_with_gladia(temp_file)
             
-            print(f"Converting audio: {temp_ogg} -> {temp_wav}")
-            subprocess.run(["ffmpeg","-y","-i",temp_ogg,"-ar","16000","-ac","1",temp_wav], check=True, capture_output=True)
-            
-            print("Transcribing with OpenAI...")
-            with open(temp_wav, "rb") as audio_file:
-                text = openai.audio.transcriptions.create(model="whisper-1", file=audio_file).text
-            
-            os.unlink(temp_ogg)
-            os.unlink(temp_wav)
+            os.unlink(temp_file)
             
             print(f"Transcription: {text}")
             lines = [x.strip() for x in text.replace(". ",".\n").split("\n") if x.strip()]
