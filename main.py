@@ -207,6 +207,38 @@ HTML = """
         padding: 2rem;
         font-style: italic;
       }
+      .notice-box {
+        background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+        border-left: 5px solid #f59e0b;
+        border-radius: 12px;
+        padding: 1.2rem 1.5rem;
+        margin-bottom: 1.5rem;
+        animation: slideDown 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 2px 8px rgba(245, 158, 11, 0.15);
+      }
+      @keyframes slideDown {
+        from { opacity: 0; transform: translateY(-20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .notice-box h6 {
+        color: #92400e;
+        font-weight: bold;
+        margin: 0 0 0.8rem 0;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .notice-box ul {
+        margin: 0;
+        padding-left: 1.2rem;
+        color: #78350f;
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
+      .notice-box li {
+        margin-bottom: 0.3rem;
+      }
     </style>
   </head>
   <body>
@@ -215,6 +247,16 @@ HTML = """
         <h1>🎙️ Your Voice Plans</h1>
       </div>
       <div class="content-section">
+        <div class="notice-box">
+          <h6>💡 Tips for Better Voice Notes</h6>
+          <ul>
+            <li>Speak slowly and steadily for accurate transcription</li>
+            <li>Pause briefly between sentences</li>
+            <li>Record in a quiet environment</li>
+            <li>Speak clearly and avoid mumbling</li>
+          </ul>
+        </div>
+
         <div class="add-note-section">
           <h5 style="margin: 0 0 1rem 0; color: #0c4a6e;">✏️ Add New Note</h5>
           <input type="text" id="newNoteInput" class="add-note-input" placeholder="Type what you forgot to say...">
