@@ -13,12 +13,12 @@ HTML = """
 <!doctype html>
 <html>
   <head>
-    <title>My Voice Notes To-Do List</title>
+    <title>Your Voice Plans</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
       body {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 50%, #8b5cf6 100%);
         min-height: 100vh;
         padding: 2rem;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -36,7 +36,7 @@ HTML = """
         to { opacity: 1; transform: translateY(0); }
       }
       .header-section {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 50%, #8b5cf6 100%);
         color: white;
         padding: 2rem;
         border-radius: 20px 20px 0 0;
@@ -52,8 +52,9 @@ HTML = """
         padding: 2rem;
       }
       .todo-item {
-        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        background: linear-gradient(135deg, #fef08a 0%, #fde047 100%);
         border: none;
+        border-left: 5px solid #eab308;
         border-radius: 12px;
         padding: 1rem 1.5rem;
         margin-bottom: 1rem;
@@ -64,8 +65,8 @@ HTML = """
         gap: 1rem;
       }
       .todo-item.completed {
-        opacity: 0.6;
-        background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+        background: linear-gradient(135deg, #86efac 0%, #4ade80 100%);
+        border-left: 5px solid #22c55e;
       }
       .todo-item.completed .todo-text {
         text-decoration: line-through;
@@ -73,7 +74,7 @@ HTML = """
       }
       .todo-item:hover {
         transform: translateX(5px);
-        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        box-shadow: 0 5px 20px rgba(59, 130, 246, 0.5);
       }
       @keyframes fadeIn {
         from { opacity: 0; transform: translateX(-20px); }
@@ -105,25 +106,26 @@ HTML = """
         transform: scale(1.05);
       }
       .add-note-section {
-        background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+        background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
         border-radius: 12px;
         padding: 1.5rem;
         margin-bottom: 1.5rem;
+        border-left: 5px solid #0ea5e9;
       }
       .add-note-input {
         width: 100%;
         padding: 0.8rem;
-        border: 2px solid #f59e0b;
+        border: 2px solid #0ea5e9;
         border-radius: 8px;
         font-size: 1rem;
         margin-bottom: 0.8rem;
       }
       .add-note-input:focus {
         outline: none;
-        border-color: #d97706;
+        border-color: #0284c7;
       }
       .add-btn {
-        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        background: linear-gradient(135deg, #06b6d4 0%, #0ea5e9 100%);
         color: white;
         border: none;
         border-radius: 8px;
@@ -136,10 +138,10 @@ HTML = """
       }
       .add-btn:hover {
         transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+        box-shadow: 0 4px 12px rgba(6, 182, 212, 0.5);
       }
       .share-btn {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
         color: white;
         border: none;
         border-radius: 12px;
@@ -148,13 +150,13 @@ HTML = """
         font-weight: bold;
         cursor: pointer;
         transition: all 0.3s ease;
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
         width: 100%;
         margin-top: 1rem;
       }
       .share-btn:hover {
         transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        box-shadow: 0 6px 20px rgba(139, 92, 246, 0.6);
       }
       .share-btn:active {
         transform: translateY(0);
@@ -187,11 +189,11 @@ HTML = """
   <body>
     <div class="main-card">
       <div class="header-section">
-        <h1>🎙️ Your Voice Notes</h1>
+        <h1>🎙️ Your Voice Plans</h1>
       </div>
       <div class="content-section">
         <div class="add-note-section">
-          <h5 style="margin: 0 0 1rem 0; color: #92400e;">✏️ Add New Note</h5>
+          <h5 style="margin: 0 0 1rem 0; color: #0c4a6e;">✏️ Add New Note</h5>
           <input type="text" id="newNoteInput" class="add-note-input" placeholder="Type what you forgot to say...">
           <button class="add-btn" onclick="addNote()">+ Add Note</button>
         </div>
@@ -202,7 +204,7 @@ HTML = """
               <div class="todo-item {% if item.completed %}completed{% endif %}" data-index="{{ loop.index0 }}">
                 <input type="checkbox" class="todo-checkbox" {% if item.completed %}checked{% endif %} onchange="toggleComplete({{ loop.index0 }})">
                 <span class="todo-text">{{ item.text }}</span>
-                <button class="delete-btn" onclick="deleteNote({{ loop.index0 }})">🗑️ Delete</button>
+                <button class="delete-btn" onclick="deleteNote({{ loop.index0 }})">🗑️</button>
               </div>
             {% endfor %}
           {% else %}
@@ -328,12 +330,12 @@ HOME_HTML = """
 <!doctype html>
 <html>
   <head>
-    <title>Voice Notes To-Do App</title>
+    <title>Voice Plans App</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
       body {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 50%, #8b5cf6 100%);
         min-height: 100vh;
         padding: 2rem;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -377,16 +379,17 @@ HOME_HTML = """
         padding: 2rem;
       }
       .step-card {
-        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
         border-radius: 12px;
         padding: 1.5rem;
         margin-bottom: 1rem;
         transition: all 0.3s ease;
         animation: fadeIn 0.5s ease-out backwards;
+        border-left: 4px solid #3b82f6;
       }
       .step-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
       }
       .step-card:nth-child(1) { animation-delay: 0.1s; }
       .step-card:nth-child(2) { animation-delay: 0.2s; }
@@ -396,7 +399,7 @@ HOME_HTML = """
         to { opacity: 1; transform: translateY(0); }
       }
       .step-number {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
         color: white;
         width: 40px;
         height: 40px;
@@ -407,7 +410,7 @@ HOME_HTML = """
         font-weight: bold;
         font-size: 1.2rem;
         margin-right: 1rem;
-        box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+        box-shadow: 0 4px 8px rgba(59, 130, 246, 0.4);
       }
       .info-box {
         background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
@@ -418,8 +421,8 @@ HOME_HTML = """
         animation: fadeIn 0.5s ease-out 0.4s backwards;
       }
       .status-box {
-        background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
-        border-left: 4px solid #10b981;
+        background: linear-gradient(135deg, #e9d5ff 0%, #d8b4fe 100%);
+        border-left: 4px solid #a855f7;
         border-radius: 12px;
         padding: 1.5rem;
         margin: 1.5rem 0;
@@ -427,7 +430,7 @@ HOME_HTML = """
       }
       .webhook-url {
         background: #1e293b;
-        color: #10b981;
+        color: #06b6d4;
         padding: 0.5rem 1rem;
         border-radius: 8px;
         font-family: 'Courier New', monospace;
@@ -448,8 +451,8 @@ HOME_HTML = """
   <body>
     <div class="main-card">
       <div class="header-section">
-        <h1>🎙️ Voice Notes To-Do App</h1>
-        <p>Turn your voice notes into organized to-do lists!</p>
+        <h1>🎙️ Voice Plans App</h1>
+        <p>Turn your voice notes into organized plans!</p>
       </div>
       <div class="content-section">
         <h4 style="color: #1e293b; margin-bottom: 1.5rem;">✨ How it works:</h4>
@@ -488,7 +491,7 @@ HOME_HTML = """
         
         <div class="status-box">
           <strong><span class="icon">✅</span>App Status:</strong> 
-          <span style="color: #059669;">Running and ready to receive voice notes!</span>
+          <span style="color: #7c3aed;">Running and ready to receive voice notes!</span>
         </div>
       </div>
     </div>
