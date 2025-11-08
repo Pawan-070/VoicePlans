@@ -622,16 +622,18 @@ def webhook():
             link = f"https://{host}/view/{id}"
             
             print(f"Sending link to {who}")
-            twilio.messages.create(from_="whatsapp:+14155238886", to=who, body=f"Done! Open your list:\n{link}")
-            print("Success!")
+            try:
+                twilio.messages.create(from_="whatsapp:+14155238886", to=who, body=f"Done! Open your list:\n{link}")
+                print("Success! Link sent via WhatsApp")
+            except Exception as twilio_error:
+                print(f"⚠️ Twilio message failed: {twilio_error}")
+                print(f"✅ But your transcription is ready!")
+                print(f"🔗 YOUR LINK: {link}")
+                print(f"📋 Transcription: {text[:100]}...")
         except Exception as e:
             print(f"Error processing voice note: {e}")
             import traceback
             traceback.print_exc()
-            try:
-                twilio.messages.create(from_="whatsapp:+14155238886", to=who, body=f"Sorry, there was an error processing your voice note.")
-            except:
-                pass
 
     threading.Thread(target=job).start()
     resp.message("Processing your voice note... You'll get a link shortly!")
