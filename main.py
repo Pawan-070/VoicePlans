@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template_string
+from flask import Flask, request, render_template_string, jsonify
 from twilio.twiml.messaging_response import MessagingResponse
 from twilio.rest import Client
 import os, time, uuid, requests, tempfile, threading
@@ -27,7 +27,7 @@ HTML = """
         background: white;
         border-radius: 20px;
         box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-        max-width: 600px;
+        max-width: 700px;
         margin: 0 auto;
         animation: slideUp 0.5s ease-out;
       }
@@ -59,20 +59,85 @@ HTML = """
         margin-bottom: 1rem;
         transition: all 0.3s ease;
         animation: fadeIn 0.5s ease-out backwards;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+      .todo-item.completed {
+        opacity: 0.6;
+        background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+      }
+      .todo-item.completed .todo-text {
+        text-decoration: line-through;
+        color: #6b7280;
       }
       .todo-item:hover {
-        transform: translateX(10px);
+        transform: translateX(5px);
         box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
       }
       @keyframes fadeIn {
         from { opacity: 0; transform: translateX(-20px); }
         to { opacity: 1; transform: translateX(0); }
       }
-      .todo-item:nth-child(1) { animation-delay: 0.1s; }
-      .todo-item:nth-child(2) { animation-delay: 0.2s; }
-      .todo-item:nth-child(3) { animation-delay: 0.3s; }
-      .todo-item:nth-child(4) { animation-delay: 0.4s; }
-      .todo-item:nth-child(5) { animation-delay: 0.5s; }
+      .todo-checkbox {
+        width: 24px;
+        height: 24px;
+        cursor: pointer;
+        flex-shrink: 0;
+      }
+      .todo-text {
+        flex: 1;
+        font-size: 1rem;
+      }
+      .delete-btn {
+        background: #ef4444;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 0.4rem 0.8rem;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: all 0.2s ease;
+        flex-shrink: 0;
+      }
+      .delete-btn:hover {
+        background: #dc2626;
+        transform: scale(1.05);
+      }
+      .add-note-section {
+        background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+      .add-note-input {
+        width: 100%;
+        padding: 0.8rem;
+        border: 2px solid #f59e0b;
+        border-radius: 8px;
+        font-size: 1rem;
+        margin-bottom: 0.8rem;
+      }
+      .add-note-input:focus {
+        outline: none;
+        border-color: #d97706;
+      }
+      .add-btn {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 0.8rem 1.5rem;
+        font-size: 1rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 100%;
+      }
+      .add-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+      }
       .share-btn {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
@@ -105,6 +170,7 @@ HTML = """
         box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         display: none;
         animation: slideInRight 0.3s ease-out;
+        z-index: 1000;
       }
       @keyframes slideInRight {
         from { transform: translateX(100%); opacity: 0; }
@@ -124,22 +190,31 @@ HTML = """
         <h1>🎙️ Your Voice Notes</h1>
       </div>
       <div class="content-section">
-        {% if lines and lines[0] != "No notes yet" %}
-          <div class="todo-list">
-            {% for line in lines %}
-              <div class="todo-item">
-                ✓ {{ line }}
+        <div class="add-note-section">
+          <h5 style="margin: 0 0 1rem 0; color: #92400e;">✏️ Add New Note</h5>
+          <input type="text" id="newNoteInput" class="add-note-input" placeholder="Type what you forgot to say...">
+          <button class="add-btn" onclick="addNote()">+ Add Note</button>
+        </div>
+
+        <div id="todoList">
+          {% if items %}
+            {% for item in items %}
+              <div class="todo-item {% if item.completed %}completed{% endif %}" data-index="{{ loop.index0 }}">
+                <input type="checkbox" class="todo-checkbox" {% if item.completed %}checked{% endif %} onchange="toggleComplete({{ loop.index0 }})">
+                <span class="todo-text">{{ item.text }}</span>
+                <button class="delete-btn" onclick="deleteNote({{ loop.index0 }})">🗑️ Delete</button>
               </div>
             {% endfor %}
-          </div>
-          <button class="share-btn" onclick="shareLink()">
-            📤 Share This List
-          </button>
-        {% else %}
-          <div class="empty-state">
-            No notes yet. Send a voice note to get started!
-          </div>
-        {% endif %}
+          {% else %}
+            <div class="empty-state">
+              No notes yet. Add a note above or send a voice note to get started!
+            </div>
+          {% endif %}
+        </div>
+
+        <button class="share-btn" onclick="shareLink()">
+          📤 Share This List
+        </button>
       </div>
     </div>
     
@@ -148,6 +223,65 @@ HTML = """
     </div>
 
     <script>
+      const noteId = "{{ note_id }}";
+
+      function addNote() {
+        const input = document.getElementById('newNoteInput');
+        const text = input.value.trim();
+        
+        if (!text) {
+          alert('Please enter a note!');
+          return;
+        }
+
+        fetch(`/api/notes/${noteId}/add`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text: text })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            window.location.reload();
+          }
+        })
+        .catch(err => console.error('Error:', err));
+      }
+
+      function deleteNote(index) {
+        if (!confirm('Delete this note?')) return;
+
+        fetch(`/api/notes/${noteId}/delete/${index}`, {
+          method: 'POST'
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            window.location.reload();
+          }
+        })
+        .catch(err => console.error('Error:', err));
+      }
+
+      function toggleComplete(index) {
+        fetch(`/api/notes/${noteId}/toggle/${index}`, {
+          method: 'POST'
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            window.location.reload();
+          }
+        })
+        .catch(err => console.error('Error:', err));
+      }
+
+      document.getElementById('newNoteInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          addNote();
+        }
+      });
+
       function shareLink() {
         const url = window.location.href;
         
@@ -463,7 +597,7 @@ def webhook():
             print(f"Transcription: {text}")
             lines = [x.strip() for x in text.replace(". ",".\n").split("\n") if x.strip()]
             id = str(uuid.uuid4())[:8]
-            notes[id] = lines
+            notes[id] = [{"text": line, "completed": False} for line in lines]
             link = f"https://{host}/view/{id}"
             
             print(f"Sending link to {who}")
@@ -484,7 +618,44 @@ def webhook():
 
 @app.route("/view/<id>")
 def view(id):
-    return render_template_string(HTML, lines=notes.get(id, ["No notes yet"]))
+    items = notes.get(id, [])
+    return render_template_string(HTML, items=items, note_id=id)
+
+@app.route("/api/notes/<id>/add", methods=["POST"])
+def add_note(id):
+    if id not in notes:
+        return jsonify({"success": False, "error": "Note not found"}), 404
+    
+    data = request.get_json()
+    text = data.get("text", "").strip()
+    
+    if not text:
+        return jsonify({"success": False, "error": "Text is required"}), 400
+    
+    notes[id].append({"text": text, "completed": False})
+    return jsonify({"success": True})
+
+@app.route("/api/notes/<id>/delete/<int:index>", methods=["POST"])
+def delete_note(id, index):
+    if id not in notes:
+        return jsonify({"success": False, "error": "Note not found"}), 404
+    
+    if index < 0 or index >= len(notes[id]):
+        return jsonify({"success": False, "error": "Invalid index"}), 400
+    
+    notes[id].pop(index)
+    return jsonify({"success": True})
+
+@app.route("/api/notes/<id>/toggle/<int:index>", methods=["POST"])
+def toggle_note(id, index):
+    if id not in notes:
+        return jsonify({"success": False, "error": "Note not found"}), 404
+    
+    if index < 0 or index >= len(notes[id]):
+        return jsonify({"success": False, "error": "Invalid index"}), 400
+    
+    notes[id][index]["completed"] = not notes[id][index]["completed"]
+    return jsonify({"success": True})
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
