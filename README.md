@@ -1,7 +1,5 @@
 # Voice Plans App
 
-![App Icon](WhatsApp Image 2025-11-08 at 22.35.03.jpeg)
-)
 
 **Speak once. Get a plan.**  
 Transform **WhatsApp voice notes** into **beautiful, shareable to-do lists** — instantly.
