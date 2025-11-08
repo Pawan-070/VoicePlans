@@ -18,7 +18,7 @@ HTML = """
 <!doctype html>
 <html>
   <head>
-    <title>🌿 Your Voice Plans</title>
+    <title>✨ EchoNote</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
@@ -29,11 +29,11 @@ HTML = """
       }
       
       body {
-        background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #bbf7d0 100%);
+        background: linear-gradient(135deg, #F9FAFB 0%, #E0F2FE 100%);
         min-height: 100vh;
         padding: 1.5rem;
         font-family: 'Inter', -apple-system, sans-serif;
-        color: #1e3a1e;
+        color: #0F172A;
       }
       
       .container {
@@ -43,35 +43,40 @@ HTML = """
       
       /* Hero Header */
       .hero-header {
-        background: linear-gradient(135deg, #059669 0%, #10b981 100%);
-        border-radius: 20px;
+        background: linear-gradient(135deg, #0F766E 0%, #334155 100%);
+        border-radius: 24px;
         padding: 2.5rem 2rem;
         text-align: center;
-        box-shadow: 0 10px 40px rgba(5, 150, 105, 0.25);
+        box-shadow: 0 10px 40px rgba(15, 118, 110, 0.25);
         margin-bottom: 1.5rem;
         position: relative;
         overflow: hidden;
+        backdrop-filter: blur(10px);
       }
       
       .hero-header::before {
-        content: '🌿';
+        content: '';
         position: absolute;
-        font-size: 6rem;
-        opacity: 0.1;
-        top: -1rem;
-        left: 1rem;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: radial-gradient(circle at 20% 50%, rgba(56, 189, 248, 0.1), transparent 70%);
+        pointer-events: none;
       }
       
       .hero-header h1 {
         font-size: 2rem;
         font-weight: 700;
         color: white;
-        text-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        text-shadow: 0 2px 12px rgba(0,0,0,0.2);
+        position: relative;
+        z-index: 1;
       }
       
       /* Add Note Button */
       .add-note-toggle {
-        background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+        background: linear-gradient(135deg, #0F766E 0%, #38BDF8 100%);
         color: white;
         border: none;
         border-radius: 16px;
@@ -85,23 +90,24 @@ HTML = """
         justify-content: center;
         gap: 0.5rem;
         transition: all 0.3s ease;
-        box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+        box-shadow: 0 4px 12px rgba(15, 118, 110, 0.3);
         margin-bottom: 1.5rem;
       }
       
       .add-note-toggle:hover {
         transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(5, 150, 105, 0.4);
+        box-shadow: 0 6px 20px rgba(15, 118, 110, 0.4);
       }
       
       /* Add Note Form */
       .add-note-section {
-        background: white;
-        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
         padding: 1.5rem;
         margin-bottom: 1.5rem;
-        box-shadow: 0 4px 20px rgba(5, 150, 105, 0.08);
-        border: 2px solid #d1fae5;
+        box-shadow: 0 8px 32px rgba(15, 118, 110, 0.1);
+        border: 1px solid rgba(56, 189, 248, 0.2);
+        backdrop-filter: blur(10px);
         display: none;
         animation: slideDown 0.3s ease-out;
       }
@@ -116,7 +122,7 @@ HTML = """
       }
       
       .add-note-section h5 {
-        color: #047857;
+        color: #0F766E;
         font-weight: 600;
         margin-bottom: 1rem;
         display: flex;
@@ -126,57 +132,59 @@ HTML = """
       
       .add-note-input {
         width: 100%;
-        padding: 0.8rem;
-        border: 2px solid #a7f3d0;
+        padding: 0.9rem;
+        border: 2px solid #E0F2FE;
         border-radius: 12px;
         font-size: 1rem;
         margin-bottom: 0.8rem;
         transition: all 0.3s ease;
         font-family: 'Inter', sans-serif;
+        background: white;
       }
       
       .add-note-input:focus {
         outline: none;
-        border-color: #10b981;
-        box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+        border-color: #38BDF8;
+        box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.1);
       }
       
       .add-btn {
-        background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+        background: linear-gradient(135deg, #0F766E 0%, #38BDF8 100%);
         color: white;
         border: none;
         border-radius: 12px;
-        padding: 0.8rem 1.5rem;
+        padding: 0.9rem 1.5rem;
         font-size: 1rem;
         font-weight: 600;
         cursor: pointer;
         transition: all 0.3s ease;
         width: 100%;
-        box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+        box-shadow: 0 4px 12px rgba(15, 118, 110, 0.3);
       }
       
       .add-btn:hover {
         transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(5, 150, 105, 0.4);
+        box-shadow: 0 6px 20px rgba(15, 118, 110, 0.4);
       }
       
       /* Category Section */
       .category-section {
-        background: white;
-        border-radius: 16px;
-        padding: 1.5rem;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        padding: 1.8rem;
         margin-bottom: 1.5rem;
-        box-shadow: 0 4px 20px rgba(5, 150, 105, 0.08);
-        border: 1px solid #d1fae5;
+        box-shadow: 0 8px 32px rgba(15, 118, 110, 0.08);
+        border: 1px solid rgba(56, 189, 248, 0.15);
+        backdrop-filter: blur(10px);
       }
       
       .category-header {
         display: flex;
         align-items: center;
         gap: 0.75rem;
-        margin-bottom: 1rem;
-        padding-bottom: 0.75rem;
-        border-bottom: 2px solid #d1fae5;
+        margin-bottom: 1.2rem;
+        padding-bottom: 0.9rem;
+        border-bottom: 2px solid #E0F2FE;
       }
       
       .category-icon {
@@ -184,43 +192,46 @@ HTML = """
       }
       
       .category-title {
-        font-size: 1.25rem;
+        font-size: 1.3rem;
         font-weight: 600;
-        color: #047857;
+        color: #0F766E;
         flex: 1;
       }
       
       .category-count {
-        background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
-        color: #047857;
-        padding: 0.25rem 0.75rem;
-        border-radius: 12px;
+        background: linear-gradient(135deg, #E0F2FE 0%, #38BDF8 100%);
+        color: white;
+        padding: 0.35rem 0.85rem;
+        border-radius: 16px;
         font-size: 0.85rem;
-        font-weight: 600;
+        font-weight: 700;
+        box-shadow: 0 2px 8px rgba(56, 189, 248, 0.3);
       }
       
       /* Todo Item */
       .todo-item {
-        background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
-        border: none;
-        border-left: 4px solid #10b981;
-        border-radius: 12px;
-        padding: 1rem 1.25rem;
-        margin-bottom: 0.75rem;
-        transition: all 0.3s ease;
+        background: linear-gradient(135deg, #F9FAFB 0%, #FFFFFF 100%);
+        border: 1px solid #E0F2FE;
+        border-left: 4px solid #38BDF8;
+        border-radius: 14px;
+        padding: 1.1rem 1.3rem;
+        margin-bottom: 0.8rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         display: flex;
         align-items: center;
         gap: 1rem;
       }
       
       .todo-item:hover {
-        transform: translateX(6px);
-        box-shadow: 0 6px 20px rgba(16, 185, 129, 0.15);
+        transform: translateX(8px);
+        box-shadow: 0 8px 24px rgba(56, 189, 248, 0.2);
+        border-left-color: #0F766E;
       }
       
       .todo-item.completed {
-        background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+        background: linear-gradient(135deg, #F9FAFB 0%, #F3F4F6 100%);
         border-left: 4px solid #9ca3af;
+        opacity: 0.7;
       }
       
       .todo-item.completed .todo-text {
@@ -229,53 +240,55 @@ HTML = """
       }
       
       .todo-checkbox {
-        width: 22px;
-        height: 22px;
+        width: 24px;
+        height: 24px;
         cursor: pointer;
         flex-shrink: 0;
-        accent-color: #10b981;
+        accent-color: #38BDF8;
         transition: transform 0.2s ease;
       }
       
       .todo-checkbox:hover {
-        transform: scale(1.1);
+        transform: scale(1.15);
       }
       
       .todo-content {
         flex: 1;
         display: flex;
         flex-direction: column;
-        gap: 0.4rem;
+        gap: 0.5rem;
       }
       
       .todo-text {
-        font-size: 1rem;
-        color: #1e3a1e;
-        line-height: 1.5;
+        font-size: 1.05rem;
+        color: #0F172A;
+        line-height: 1.6;
         transition: all 0.3s ease;
+        font-weight: 500;
       }
       
       .todo-date {
         font-size: 0.8rem;
         color: white;
-        background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+        background: linear-gradient(135deg, #0F766E 0%, #38BDF8 100%);
         font-weight: 600;
-        padding: 0.3rem 0.7rem;
-        border-radius: 12px;
+        padding: 0.35rem 0.8rem;
+        border-radius: 14px;
         display: inline-flex;
         align-items: center;
-        gap: 0.3rem;
+        gap: 0.4rem;
         width: fit-content;
-        box-shadow: 0 2px 8px rgba(5, 150, 105, 0.2);
+        box-shadow: 0 2px 10px rgba(56, 189, 248, 0.3);
       }
       
       .delete-btn {
-        background: transparent;
-        color: #d1d5db;
-        border: none;
-        padding: 0.3rem;
+        background: rgba(255, 255, 255, 0.8);
+        color: #9ca3af;
+        border: 1px solid #E0F2FE;
+        border-radius: 10px;
+        padding: 0.4rem;
         cursor: pointer;
-        font-size: 1.3rem;
+        font-size: 1.2rem;
         transition: all 0.2s ease;
         flex-shrink: 0;
         display: flex;
@@ -285,28 +298,30 @@ HTML = """
       
       .delete-btn:hover {
         color: #ef4444;
+        background: #fee2e2;
+        border-color: #fecaca;
         transform: scale(1.1);
       }
       
       /* Share Button */
       .share-btn {
-        background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+        background: linear-gradient(135deg, #0F766E 0%, #38BDF8 100%);
         color: white;
         border: none;
         border-radius: 16px;
-        padding: 1rem 2rem;
+        padding: 1.1rem 2rem;
         font-size: 1.05rem;
         font-weight: 600;
         cursor: pointer;
         transition: all 0.3s ease;
-        box-shadow: 0 4px 15px rgba(5, 150, 105, 0.3);
+        box-shadow: 0 4px 20px rgba(15, 118, 110, 0.3);
         width: 100%;
         margin-top: 1rem;
       }
       
       .share-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(5, 150, 105, 0.4);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 28px rgba(15, 118, 110, 0.4);
       }
       
       /* Copy Notification */
@@ -314,37 +329,40 @@ HTML = """
         position: fixed;
         top: 20px;
         right: 20px;
-        background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+        background: linear-gradient(135deg, #0F766E 0%, #38BDF8 100%);
         color: white;
-        padding: 1rem 2rem;
-        border-radius: 16px;
-        box-shadow: 0 8px 24px rgba(5, 150, 105, 0.4);
+        padding: 1.1rem 2.2rem;
+        border-radius: 20px;
+        box-shadow: 0 10px 32px rgba(15, 118, 110, 0.4);
+        backdrop-filter: blur(10px);
         display: none;
-        animation: slideInRight 0.3s ease-out;
+        animation: slideInRight 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         z-index: 1000;
         font-weight: 600;
       }
       
       @keyframes slideInRight {
-        from { transform: translateX(100%); opacity: 0; }
+        from { transform: translateX(120%); opacity: 0; }
         to { transform: translateX(0); opacity: 1; }
       }
       
       /* Empty State */
       .empty-state {
         text-align: center;
-        padding: 3rem 2rem;
-        color: #6b7280;
+        padding: 4rem 2rem;
+        color: #64748b;
       }
       
       .empty-state-icon {
-        font-size: 4rem;
-        margin-bottom: 1rem;
+        font-size: 4.5rem;
+        margin-bottom: 1.2rem;
+        opacity: 0.8;
       }
       
       .empty-state-text {
-        font-size: 1.1rem;
-        color: #9ca3af;
+        font-size: 1.15rem;
+        color: #94a3b8;
+        font-weight: 500;
       }
       
       @media (max-width: 768px) {
@@ -365,7 +383,7 @@ HTML = """
   <body>
     <div class="container">
       <div class="hero-header">
-        <h1>🌿 Your Voice Plans</h1>
+        <h1>✨ EchoNote</h1>
       </div>
       
       <button class="add-note-toggle" onclick="toggleAddForm()">
@@ -381,21 +399,23 @@ HTML = """
 
       <div id="todoList">
         {% if items %}
-          <!-- Scheduled Tasks -->
-          {% set scheduled = items | selectattr('date') | list %}
-          {% if scheduled %}
+          <!-- Important Tasks -->
+          {% set important = items | selectattr('importance', 'equalto', 'important') | list %}
+          {% if important %}
           <div class="category-section">
             <div class="category-header">
-              <span class="category-icon">📅</span>
-              <h3 class="category-title">Scheduled</h3>
-              <span class="category-count">{{ scheduled | length }}</span>
+              <span class="category-icon">⭐</span>
+              <h3 class="category-title">Important</h3>
+              <span class="category-count">{{ important | length }}</span>
             </div>
-            {% for item in scheduled %}
+            {% for item in important %}
               <div class="todo-item {% if item.completed %}completed{% endif %}" data-index="{{ loop.index0 }}">
                 <input type="checkbox" class="todo-checkbox" {% if item.completed %}checked{% endif %} onchange="toggleComplete({{ items.index(item) }})">
                 <div class="todo-content">
                   <span class="todo-text">{{ item.text }}</span>
+                  {% if item.date %}
                   <div class="todo-date">📅 {{ item.date }}{% if item.time %} at {{ item.time }}{% endif %}</div>
+                  {% endif %}
                 </div>
                 <button class="delete-btn" onclick="deleteNote({{ items.index(item) }})">🗑</button>
               </div>
@@ -403,20 +423,23 @@ HTML = """
           </div>
           {% endif %}
           
-          <!-- Other Tasks -->
-          {% set unscheduled = items | rejectattr('date') | list %}
-          {% if unscheduled %}
+          <!-- Non-Important Tasks -->
+          {% set nonimportant = items | selectattr('importance', 'equalto', 'non-important') | list %}
+          {% if nonimportant %}
           <div class="category-section">
             <div class="category-header">
               <span class="category-icon">📋</span>
-              <h3 class="category-title">Tasks</h3>
-              <span class="category-count">{{ unscheduled | length }}</span>
+              <h3 class="category-title">Non-Important</h3>
+              <span class="category-count">{{ nonimportant | length }}</span>
             </div>
-            {% for item in unscheduled %}
+            {% for item in nonimportant %}
               <div class="todo-item {% if item.completed %}completed{% endif %}" data-index="{{ loop.index0 }}">
                 <input type="checkbox" class="todo-checkbox" {% if item.completed %}checked{% endif %} onchange="toggleComplete({{ items.index(item) }})">
                 <div class="todo-content">
                   <span class="todo-text">{{ item.text }}</span>
+                  {% if item.date %}
+                  <div class="todo-date">📅 {{ item.date }}{% if item.time %} at {{ item.time }}{% endif %}</div>
+                  {% endif %}
                 </div>
                 <button class="delete-btn" onclick="deleteNote({{ items.index(item) }})">🗑</button>
               </div>
@@ -426,7 +449,7 @@ HTML = """
         {% else %}
           <div class="category-section">
             <div class="empty-state">
-              <div class="empty-state-icon">🌱</div>
+              <div class="empty-state-icon">💭</div>
               <div class="empty-state-text">No tasks yet. Send a voice note or add a task above!</div>
             </div>
           </div>
@@ -514,7 +537,7 @@ HTML = """
         
         if (navigator.share) {
           navigator.share({
-            title: '🌿 My Voice Plans',
+            title: '✨ EchoNote',
             text: 'Check out my organized tasks!',
             url: url
           }).catch(() => {
@@ -545,7 +568,7 @@ HOME_HTML = """
 <!doctype html>
 <html>
   <head>
-    <title>Voice Plans - Flora Edition</title>
+    <title>EchoNote - AI Voice Planning</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
@@ -556,11 +579,11 @@ HOME_HTML = """
       }
       
       body {
-        background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #bbf7d0 100%);
+        background: linear-gradient(135deg, #F9FAFB 0%, #E0F2FE 100%);
         min-height: 100vh;
         padding: 2rem 1rem;
         font-family: 'Inter', -apple-system, sans-serif;
-        color: #1e3a1e;
+        color: #0F172A;
       }
       
       .container {
@@ -568,64 +591,63 @@ HOME_HTML = """
         margin: 0 auto;
       }
       
-      /* Header with Flora Theme */
+      /* Header with EchoNote Theme */
       .hero-section {
-        background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+        background: linear-gradient(135deg, #0F766E 0%, #334155 100%);
         border-radius: 24px;
-        padding: 3rem 2rem;
+        padding: 3.5rem 2rem;
         text-align: center;
-        box-shadow: 0 20px 60px rgba(5, 150, 105, 0.25);
+        box-shadow: 0 20px 60px rgba(15, 118, 110, 0.25);
         margin-bottom: 2rem;
         position: relative;
         overflow: hidden;
+        backdrop-filter: blur(10px);
       }
       
       .hero-section::before {
-        content: '🌿';
+        content: '';
         position: absolute;
-        font-size: 8rem;
-        opacity: 0.1;
-        top: -1rem;
-        left: 2rem;
-      }
-      
-      .hero-section::after {
-        content: '🍃';
-        position: absolute;
-        font-size: 6rem;
-        opacity: 0.1;
-        bottom: -1rem;
-        right: 2rem;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: radial-gradient(circle at 30% 40%, rgba(56, 189, 248, 0.15), transparent 70%);
+        pointer-events: none;
       }
       
       .hero-section h1 {
-        font-size: 2.8rem;
+        font-size: 3rem;
         font-weight: 700;
         color: white;
-        margin-bottom: 0.5rem;
-        text-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        margin-bottom: 0.75rem;
+        text-shadow: 0 2px 12px rgba(0,0,0,0.2);
+        position: relative;
+        z-index: 1;
       }
       
       .hero-section p {
-        font-size: 1.2rem;
-        color: #d1fae5;
+        font-size: 1.25rem;
+        color: #E0F2FE;
         font-weight: 400;
+        position: relative;
+        z-index: 1;
       }
       
       /* Section Container */
       .section-card {
-        background: white;
-        border-radius: 20px;
-        padding: 2rem;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 24px;
+        padding: 2.2rem;
         margin-bottom: 1.5rem;
-        box-shadow: 0 4px 20px rgba(5, 150, 105, 0.08);
-        border: 1px solid #d1fae5;
+        box-shadow: 0 8px 32px rgba(15, 118, 110, 0.08);
+        border: 1px solid rgba(56, 189, 248, 0.15);
+        backdrop-filter: blur(10px);
       }
       
       .section-title {
-        font-size: 1.5rem;
+        font-size: 1.6rem;
         font-weight: 600;
-        color: #047857;
+        color: #0F766E;
         margin-bottom: 1.5rem;
         display: flex;
         align-items: center;
@@ -636,28 +658,30 @@ HOME_HTML = """
         content: '';
         width: 4px;
         height: 28px;
-        background: linear-gradient(180deg, #059669 0%, #10b981 100%);
+        background: linear-gradient(180deg, #0F766E 0%, #38BDF8 100%);
         border-radius: 2px;
       }
       
       /* How It Works Steps */
       .steps-container {
         display: grid;
-        gap: 1rem;
+        gap: 1.2rem;
       }
       
       .step-item {
-        background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+        background: linear-gradient(135deg, #F9FAFB 0%, #FFFFFF 100%);
         border-radius: 16px;
-        padding: 1.5rem;
-        border-left: 4px solid #10b981;
-        transition: all 0.3s ease;
+        padding: 1.6rem;
+        border-left: 4px solid #38BDF8;
+        border: 1px solid #E0F2FE;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         position: relative;
       }
       
       .step-item:hover {
-        transform: translateX(8px);
-        box-shadow: 0 8px 24px rgba(16, 185, 129, 0.15);
+        transform: translateX(10px);
+        box-shadow: 0 10px 30px rgba(56, 189, 248, 0.2);
+        border-left-color: #0F766E;
       }
       
       .step-header {
@@ -668,45 +692,46 @@ HOME_HTML = """
       }
       
       .step-number {
-        background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+        background: linear-gradient(135deg, #0F766E 0%, #38BDF8 100%);
         color: white;
-        width: 36px;
-        height: 36px;
+        width: 40px;
+        height: 40px;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         font-weight: 700;
-        font-size: 1rem;
-        box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+        font-size: 1.1rem;
+        box-shadow: 0 4px 16px rgba(15, 118, 110, 0.3);
       }
       
       .step-title {
-        font-size: 1.1rem;
+        font-size: 1.15rem;
         font-weight: 600;
-        color: #065f46;
+        color: #0F766E;
       }
       
       .step-description {
-        color: #374151;
-        font-size: 0.95rem;
-        line-height: 1.6;
-        margin-left: 3rem;
+        color: #334155;
+        font-size: 0.98rem;
+        line-height: 1.7;
+        margin-left: 3.2rem;
       }
       
       /* Technical Setup Section */
       .tech-box {
-        background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-        border-left: 4px solid #f59e0b;
+        background: linear-gradient(135deg, #E0F2FE 0%, #BFDBFE 100%);
+        border-left: 4px solid #38BDF8;
         border-radius: 16px;
-        padding: 1.5rem;
+        padding: 1.6rem;
         margin-top: 1rem;
+        border: 1px solid rgba(56, 189, 248, 0.2);
       }
       
       .tech-box h5 {
-        color: #92400e;
+        color: #0F766E;
         font-weight: 600;
-        margin-bottom: 0.75rem;
+        margin-bottom: 0.9rem;
         display: flex;
         align-items: center;
         gap: 0.5rem;
@@ -714,96 +739,101 @@ HOME_HTML = """
       
       .webhook-url {
         background: #1e293b;
-        color: #86efac;
-        padding: 0.75rem 1rem;
-        border-radius: 12px;
+        color: #38BDF8;
+        padding: 0.9rem 1.2rem;
+        border-radius: 14px;
         font-family: 'Courier New', monospace;
         font-size: 0.9rem;
         word-break: break-all;
         margin: 0.75rem 0;
         display: block;
         border: 2px solid #334155;
+        font-weight: 500;
       }
       
       /* Features Grid */
       .features-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 1rem;
-        margin-top: 1rem;
+        gap: 1.2rem;
+        margin-top: 1.2rem;
       }
       
       .feature-item {
-        background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
-        padding: 1.25rem;
-        border-radius: 12px;
-        border: 1px solid #a7f3d0;
-        transition: all 0.3s ease;
+        background: linear-gradient(135deg, #F9FAFB 0%, #FFFFFF 100%);
+        padding: 1.4rem;
+        border-radius: 16px;
+        border: 1px solid #E0F2FE;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       }
       
       .feature-item:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 8px 20px rgba(16, 185, 129, 0.15);
+        transform: translateY(-6px);
+        box-shadow: 0 12px 28px rgba(56, 189, 248, 0.2);
+        border-color: #38BDF8;
       }
       
       .feature-icon {
-        font-size: 2rem;
-        margin-bottom: 0.5rem;
+        font-size: 2.2rem;
+        margin-bottom: 0.6rem;
         display: block;
       }
       
       .feature-title {
         font-weight: 600;
-        color: #065f46;
-        margin-bottom: 0.25rem;
+        color: #0F766E;
+        margin-bottom: 0.35rem;
+        font-size: 1.05rem;
       }
       
       .feature-desc {
-        font-size: 0.85rem;
-        color: #374151;
+        font-size: 0.88rem;
+        color: #334155;
+        line-height: 1.5;
       }
       
       /* Status Indicator */
       .status-badge {
         display: inline-flex;
         align-items: center;
-        gap: 0.5rem;
-        background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+        gap: 0.6rem;
+        background: linear-gradient(135deg, #0F766E 0%, #38BDF8 100%);
         color: white;
-        padding: 0.5rem 1rem;
-        border-radius: 20px;
+        padding: 0.7rem 1.3rem;
+        border-radius: 24px;
         font-size: 0.9rem;
         font-weight: 600;
         box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
       }
       
       .status-dot {
-        width: 8px;
-        height: 8px;
-        background: #d1fae5;
+        width: 10px;
+        height: 10px;
+        background: #38BDF8;
         border-radius: 50%;
         animation: pulse 2s infinite;
+        box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.7);
       }
       
       @keyframes pulse {
-        0%, 100% { opacity: 1; transform: scale(1); }
-        50% { opacity: 0.6; transform: scale(1.2); }
+        0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.7); }
+        50% { opacity: 0.8; transform: scale(1.1); box-shadow: 0 0 0 6px rgba(56, 189, 248, 0); }
       }
       
       /* Calendar Section */
       .calendar-badge {
-        background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
-        border: 2px solid #3b82f6;
-        border-radius: 12px;
-        padding: 1rem;
+        background: linear-gradient(135deg, #E0F2FE 0%, #BFDBFE 100%);
+        border: 2px solid #38BDF8;
+        border-radius: 16px;
+        padding: 1.2rem;
         margin-top: 1rem;
         display: flex;
         align-items: center;
-        gap: 1rem;
+        gap: 1.2rem;
       }
       
       .calendar-badge strong {
-        color: #1e40af;
+        color: #0F766E;
       }
       
       @media (max-width: 768px) {
@@ -821,8 +851,8 @@ HOME_HTML = """
     <div class="container">
       <!-- Hero Section -->
       <div class="hero-section">
-        <h1>🌿 Voice Plans</h1>
-        <p>Transform your thoughts into organized plans, naturally</p>
+        <h1>✨ EchoNote</h1>
+        <p>Transform your thoughts into organized, prioritized plans</p>
       </div>
       
       <!-- How It Works -->
@@ -842,20 +872,20 @@ HOME_HTML = """
           <div class="step-item">
             <div class="step-header">
               <div class="step-number">2</div>
-              <div class="step-title">🤖 AI Transcription</div>
+              <div class="step-title">🤖 AI Processing</div>
             </div>
             <p class="step-description">
-              Our AI transcribes your voice with AssemblyAI, extracts dates/times, and organizes everything automatically.
+              Our AI transcribes your voice, extracts dates/times, and intelligently classifies tasks as Important or Non-Important.
             </p>
           </div>
           
           <div class="step-item">
             <div class="step-header">
               <div class="step-number">3</div>
-              <div class="step-title">📋 Get Organized</div>
+              <div class="step-title">⭐ Get Organized</div>
             </div>
             <p class="step-description">
-              Receive a beautiful shareable link with your tasks categorized and ready to manage!
+              Receive a beautiful shareable link with tasks auto-categorized by importance and synced to your calendar!
             </p>
           </div>
         </div>
@@ -878,9 +908,9 @@ HOME_HTML = """
           </div>
           
           <div class="feature-item">
-            <span class="feature-icon">📂</span>
-            <div class="feature-title">Auto Categories</div>
-            <div class="feature-desc">Tasks organized by type for easy management</div>
+            <span class="feature-icon">⭐</span>
+            <div class="feature-title">AI Priority</div>
+            <div class="feature-desc">Smart classification into Important and Non-Important</div>
           </div>
           
           <div class="feature-item">
@@ -896,9 +926,9 @@ HOME_HTML = """
           </div>
           
           <div class="feature-item">
-            <span class="feature-icon">🌿</span>
-            <div class="feature-title">Flora Design</div>
-            <div class="feature-desc">Beautiful, calming interface</div>
+            <span class="feature-icon">✨</span>
+            <div class="feature-title">Modern Design</div>
+            <div class="feature-desc">Beautiful, professional teal-gray interface</div>
           </div>
         </div>
       </div>
@@ -1000,6 +1030,56 @@ Return in the exact format shown above."""
         print(f"Error extracting datetime: {e}")
         return None, None
 
+def classify_task_importance(text):
+    """Classify task as important or non-important using AI"""
+    try:
+        prompt = f"""Classify this task as either "important" or "non-important".
+
+IMPORTANT tasks include:
+- Family functions, family events, family gatherings
+- Office meetings, work meetings, business meetings
+- Medical appointments, doctor visits
+- Important deadlines, urgent work
+- Celebrations, weddings, parties
+
+NON-IMPORTANT tasks include:
+- Shopping, buying items, groceries
+- General errands, routine tasks
+- Personal reminders, casual notes
+- Chores, household tasks
+
+Task: {text}
+
+Respond with ONLY one word: "important" or "non-important"."""
+
+        response = openai_client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0,
+            max_tokens=10
+        )
+        
+        result = response.choices[0].message.content
+        if not result:
+            return "non-important"
+            
+        # Normalize response: remove hyphens and extra spaces
+        result = result.strip().lower().replace("-", " ").replace("  ", " ")
+        
+        # Check for exact matches
+        if result == "important":
+            return "important"
+        elif "non important" in result or "not important" in result:
+            return "non-important"
+        elif "important" in result:
+            return "important"
+        else:
+            return "non-important"
+        
+    except Exception as e:
+        print(f"Error classifying importance: {e}")
+        return "non-important"
+
 def get_calendar_service():
     """Get authenticated Google Calendar service (non-blocking)"""
     try:
@@ -1056,7 +1136,7 @@ def create_calendar_event(task_text, date_str, time_str=None, timezone='America/
                     'dateTime': end_datetime,
                     'timeZone': timezone,
                 },
-                'description': 'Created from Voice Plans App'
+                'description': 'Created from EchoNote'
             }
         else:
             # All-day event - end date must be next day (exclusive)
@@ -1069,7 +1149,7 @@ def create_calendar_event(task_text, date_str, time_str=None, timezone='America/
                 'end': {
                     'date': end_date,
                 },
-                'description': 'Created from Voice Plans App'
+                'description': 'Created from EchoNote'
             }
         
         created_event = service.events().insert(calendarId='primary', body=event).execute()
@@ -1368,18 +1448,21 @@ def webhook():
             lines = [x.strip() for x in text.replace(". ",".\n").split("\n") if x.strip()]
             id = str(uuid.uuid4())[:8]
             
-            # Extract dates and times from each line
+            # Extract dates, times, and importance from each line
             tasks = []
             for line in lines:
                 extracted_date, extracted_time = extract_datetime_from_text(line)
+                importance = classify_task_importance(line)
                 tasks.append({
                     "text": line,
                     "completed": False,
                     "date": extracted_date,
-                    "time": extracted_time
+                    "time": extracted_time,
+                    "importance": importance
                 })
                 if extracted_date or extracted_time:
                     print(f"Extracted date='{extracted_date}', time='{extracted_time}' from: {line}")
+                print(f"Classified as '{importance}': {line}")
                 
                 # Create Google Calendar event if date is present
                 if extracted_date:
@@ -1428,7 +1511,8 @@ def add_note(id):
     if not text:
         return jsonify({"success": False, "error": "Text is required"}), 400
     
-    notes[id].append({"text": text, "completed": False, "date": date if date else None, "time": None})
+    importance = classify_task_importance(text)
+    notes[id].append({"text": text, "completed": False, "date": date if date else None, "time": None, "importance": importance})
     return jsonify({"success": True})
 
 @app.route("/api/notes/<id>/delete/<int:index>", methods=["POST"])
