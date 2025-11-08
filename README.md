@@ -41,9 +41,3 @@ When you send a voice message to your Twilio WhatsApp number, the app automatica
 
 ---
 
-## Setup Instructions
-
-### 1. Clone the Repository
-```bash
-git clone https://github.com/yourusername/voice-plans-app.git
-cd voice-plans-app
