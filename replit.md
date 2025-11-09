@@ -5,7 +5,7 @@ A modern, professional Flask web application that converts WhatsApp voice notes 
 
 ## Features
 - **Modern EchoNote Design**: Professional teal-gray color scheme with frosted glass effects and elegant animations
-- **Smart Importance Classification**: Tasks automatically classified as "Important" (family functions, office meetings, medical appointments) or "Non-Important" (shopping, errands, chores) using keyword matching
+- **Smart Importance Classification**: Tasks automatically classified as "Important" (family functions, office meetings, medical appointments) or "Non-Important" (shopping, errands, chores) using keyword matching. Defaults to Non-Important when unclear.
 - **Live Clock Widget**: Mini clock displaying current time and date in the top corner
 - **Smart Categorization**: Tasks organized into ⭐ Important and 📋 Non-Important sections with visual badges
 - **Voice Note Processing**: Receives voice notes via Twilio WhatsApp webhook

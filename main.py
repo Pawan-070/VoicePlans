@@ -1206,13 +1206,13 @@ def classify_task_importance(text):
       print(f"Classified as 'non-important': {text} (score: {non_important_count} vs {important_count})")
       return "non-important"
     else:
-      # Default to important if unclear (conservative approach)
-      print(f"Classified as 'important' (default): {text}")
-      return "important"
+      # Default to non-important if unclear
+      print(f"Classified as 'non-important' (default): {text}")
+      return "non-important"
     
   except Exception as e:
     print(f"Error classifying importance: {e}")
-    return "important"  # Default to important on error
+    return "non-important"  # Default to non-important on error
 
 
 def get_calendar_service():
